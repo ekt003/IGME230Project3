@@ -75,7 +75,7 @@
 /*--- Paralax 1 ---*/
 .parallax {
    
-    background-image: url('../media/background.jpg');
+    background-image: url('../media/earth-space.jpg');
     height: 22%; 
 
     background-attachment: fixed;
@@ -95,7 +95,7 @@
 
 /*--- Paralax 2 ---*/
 .parallax2 {
-    background-image: url('../media/background2.jpg');
+    background-image: url('../media/blue-space.jpeg');
     height: 22%; 
 
     background-attachment: fixed;
@@ -105,7 +105,7 @@
 }
 /*--- Paralax 3 ---*/
 .parallax3 {
-    background-image: url('../media/background3.jpg');
+    background-image: url('../media/red-space.jpeg');
     height: 22%; 
 
     background-attachment: fixed;
@@ -187,14 +187,16 @@ img{
     }
     #navcontainer ul
     {
-        padding: 32%;
+        margin 0%;
+        padding: 1%;
         display:inline-block;
         width: 100%;
         text-align: center;
         list-style-type: none;
     }    
     #navcontainer ul li { 
-        padding: 5%;
+        
+        padding: 2%;
         display: inline-block;
         font-size: 18pt;
     }
