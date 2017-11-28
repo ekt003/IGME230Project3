@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8" />
+	<title></title>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/pixi.js/4.6.0/pixi.min.js"></script>
+	<style>
+	html, body {
+		margin: 0;
+		padding: 0;
+	}
+	
+	canvas{
+		 position: absolute;
+	}
+	
+	
+	#controls{
+		position: absolute;
+		top: 15px;
+		left: 5px;
+		z-index: 1;
+		width: 120px;
+		background-color: rgba(255,255,255,0.2);
+		font-family: sans-serif;
+		font-size: 12px;
+		color: #fff;
+		color: rgba(255,255,255,0.5);
+	}
+
+	#controls input[type="checkbox"], #fps{
+		margin-left:5px;
+	}
+
+	</style>
+</head>
+<body>
+
+<script>
+/*
+	Here is an example of a PixiJS particle "experience".
+	If you end up doing something like this for Project 2, it needs to be a lot more 
+	interactive, and "cooler"!
+	
+	Borrowed the "look" from this CodePen, but our code is 100% different:
+	https://codepen.io/erikterwan/pen/VpjVvZ
+	
+	Many inspirations for particle systems on CodePen:
+	https://codepen.io/search/pens?q=particle&order=popularity&depth=everything&show_forks=false
+	Many of these are done <canvas>, so you will need to modify the code obviously
+	
+	Also check out this (in Processing, so you will need to modify for PixiJS):
+	http://natureofcode.com/book/chapter-4-particle-systems/
+	
+	Depending on what you want to do, you may want to switch the code over to vectors,
+	so check out this JS vector library: 
+	http://victorjs.org
+*/
+
+  "use strict";
+	let app, container, particles = 1000;
+	let numberOfParticles = 50;
+	let particleTexture
+  	let lifetime = 0;
+  	  
+	window.onload = ()=>{
+		// load the particle texture synchronously
+		particleTexture = PIXI.Texture.fromImage('images/particle.png');
+		 
+		// create the renderer
+		app = new PIXI.Application(window.innerWidth, window.innerHeight, { antialias: true });
+
+		// add the canvas to the document
+		document.body.appendChild(app.view);
+	
+		
+		// create the particles and get started
+		createParticles(); 
+	}
+  
+  const createParticles = ()=>{
+    particles = [];
+    container = new PIXI.particles.ParticleContainer();
+    container.maxSize = 30000;
+    app.stage.addChild(container);
+    for (let i = 0; i < numberOfParticles; i++) {
+	    let p = new Particle(
+      	  Math.random() * 2 + 1,
+      	  Math.random() * window.innerWidth,
+          Math.random() * window.innerHeight
+		  );
+      	particles.push(p);
+     	container.addChild(p);
+    }
+    
+    // Animate the rotation
+    app.ticker.add(update);
+  }
+  
+
+  const update = ()=>{
+  	let dt = 1/app.ticker.FPS;
+  	if (dt > 1/12) dt=1/12;
+  	
+
+ 
+    for (let p of particles){
+      p.update();
+    }
+    
+    lifetime++;
+    
+  }
+  
+  
+  // ES6 Particle Class
+  class Particle extends PIXI.Sprite{
+	constructor(radius, x, y, vel){
+		super(particleTexture);
+		this.x = x;
+		this.y = y;
+		this.anchor.set(.5,.5);
+		this.width = radius*20;
+ 		this.height = radius*20;
+		this.radius = radius;
+
+		let colorTint = Math.floor(Math.random()*(10));
+
+		switch(colorTint){
+			case 0:
+				this.tint = 0x590000;
+				break;
+			case 1:
+				this.tint = 0x592200;
+				break;
+			case 2:
+				this.tint = 0x594a00;
+				break;
+			case 3:
+				this.tint = 0x475900;
+				break;
+			case 4:
+				this.tint = 0x2c0379;
+				break;
+			case 5:
+				this.tint = 0x00591d;
+				break;
+			case 6:
+				this.tint = 0x003f59;
+				break;
+			case 7:
+				this.tint = 0x002459;
+				break;
+			case 8:
+				this.tint = 0x170059;
+				break;
+			case 9:
+				this.tint = 0x490059;
+				break;
+		}
+
+	}
+	
+	update(){
+
+		this.y -= 4;
+
+		if(this.y <0){
+			this.y = (window.innerHeight - (this.radius + 10));
+		}
+
+		
+	}
+  }
+  
+</script>
+</body>
+</html>
