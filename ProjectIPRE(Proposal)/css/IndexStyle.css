@@ -2,6 +2,11 @@
     margin-left: 5%;
     margin-right: 5%;
 }
+
+@font-face{
+    font-family: AdventureZone;
+    src: url(../fonts/Adventure.otf);
+}
 /* ----- Header Bar -----*/
 #header{
     margin: 0%;
@@ -20,7 +25,7 @@
 
 #navcontainer{
     margin: 0%;
-    font-family: 'Adventure', cursive;
+    font-family: "AdventureZone";
     text-align: center;
     font-size: 20px;
 }
@@ -121,7 +126,7 @@ body, html {
 
 }
 h1,h2,h3{
-    font-family: 'Adventure', cursive;
+    font-family: 'AdventureZone', cursive;
 }
 h1{
     color: white;
@@ -156,6 +161,13 @@ img{
 }
 .smlpic{
     display: none;
+}
+.nameTag{
+    font-size: 20pt;
+    text-align: left;
+}
+.nameDesc{
+    margin-left: 10%;
 }
 /* ----- Media Queries -----*/
 
