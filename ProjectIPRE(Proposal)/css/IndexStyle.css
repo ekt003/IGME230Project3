@@ -169,6 +169,9 @@ img{
 .nameDesc{
     margin-left: 10%;
 }
+.imageScale{
+    width: 100%;
+}
 /* ----- Media Queries -----*/
 
 
