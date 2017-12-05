@@ -50,3 +50,23 @@ class Circle extends PIXI.Graphics{
         this.fwd.y *= -1;
     }
 }
+
+class LightofCreation extends PIXI.Graphics{
+    constructor(radius, x=0, y=0,angle=0.0){
+        super();
+        this.beginFill(0xFFFFFF);
+        this.drawCircle(0,0,radius);
+        this.endFill();
+        this.x = x;
+        this.y = y;
+        this.radius = radius;
+
+        //variables
+        this.isAlive = true;
+
+    }
+
+    move(){
+        this.y -= 2;
+    }
+}

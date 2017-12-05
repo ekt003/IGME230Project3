@@ -31,7 +31,7 @@ let life = 100;
 let levelNum = 1;
 let paused = true;
 let gameOverScoreLabel;
-let keyObject = keyboard(asciiKeyCodeNumber);
+let light;
 
 function setup() {
 	stage = app.stage;
@@ -91,8 +91,8 @@ function createLabelsAndButtons(){
         strokeThickness: 4
     });
 
-    //1 - set up `startScene`
-    //1A - make the top start label
+    //set up `startScene`
+    //make the top start label
     let startLabel1 = new PIXI.Text("Project IPRE");
     startLabel1.style = new PIXI.TextStyle({
         fill:0xFFFFFF,
@@ -106,7 +106,7 @@ function createLabelsAndButtons(){
     startLabel1.y = 120;
     startScene.addChild(startLabel1);
 
-    //1B - make the middle start label
+    //make the middle start label
     let startLabel2 = new PIXI.Text("Ready to explore the universe?");
     startLabel2.style = new PIXI.TextStyle({
         fill:0xFFFFFF,
@@ -120,7 +120,7 @@ function createLabelsAndButtons(){
     startLabel2.y = 300;
     startScene.addChild(startLabel2);
 
-    //1C - make the start game button
+    //make the start game button
     let startButton = new PIXI.Text("Start Research");
     startButton.style = buttonStyle;
     startButton.x = 170;
@@ -220,6 +220,7 @@ function startGame(){
     circleTimer = 0;
     levelDifficultly = 60;//One per 60 ticks
     loadLevel();
+    SpawnLight();
 
 }
 
@@ -239,14 +240,22 @@ function SpawnCircle(){
     createCircles(1);
 }
 
+function SpawnLight(){
+    let c = new Circle(10,0xFFFFFF);
+    c.x = Math.floor(Math.random()*(sceneWidth));
+    c.y = 20;
+    light = c;
+    gameScene.addChild(light);
+}
+
 function gameLoop(){
 	if (paused) return; // keep this commented out for now
 	
-	// #1 - Calculate "delta time"
+	//Calculate "delta time"
 	let dt = 1/app.ticker.FPS;
     if(dt > 1/12) dt=1/12;
 	
-	// #2 - Move Ship
+	//Move Ship
 	let mousePosition = app.renderer.plugins.interaction.mouse.global;
     
     let amt = 6*dt;
@@ -268,12 +277,15 @@ function gameLoop(){
             c.reflectX();
             //c.move(dt);
         }
-        //c.y <= c.radius || 
         if(c.y >= sceneHeight-c.radius){
             c.reflectY();
             c.move(dt);
         }
     }
+
+    //move light of creation
+    light.move();
+
     // #3 - gyrate Hunger
     for(let h of hunger){
         h.moveInCircle(dt);
@@ -288,7 +300,7 @@ function gameLoop(){
 //        }
     }
 	
-	// #5 - Check for Collisions
+	//Check for Collisions
 	for(let c of circles){
         //circles and ship
         if(c.isAlive && rectsIntersect(c,ship)){
@@ -297,6 +309,16 @@ function gameLoop(){
             c.isAlive = false;
             decreaseLifeBy(20);
         }
+        if(light.isAlive && c.isAlive && rectsIntersect(c,light)){
+            console.log("Hunger gets the light");
+            light.isAlive = false;
+        }
+    }
+
+    if(light.isAlive && rectsIntersect(light,ship)){
+        console.log("The IPRE gains the light!");
+        increaseScoreBy(1);
+        light.isAlive = false;
     }
     
     //Increase timer
@@ -311,7 +333,11 @@ function gameLoop(){
 
 
 	// #6 - Now do some clean up
-	
+	if(!light.isAlive){
+        gameScene.removeChild(light);
+        SpawnLight();
+    }
+
 	// #7 - Is game over?
 	if(life <= 0){
         end();
@@ -325,6 +351,7 @@ function gameLoop(){
     }
 }
 
+//creates circle enemies coming off of the enemy
 function createCircles(numCircles){
     for(let i=0;i<numCircles;i++){
         
@@ -372,6 +399,7 @@ function createCircles(numCircles){
         
     }
 }
+
 function createHunger(numHunger){
     for(let i=0;i<numHunger;i++){
         let h = new Circle(50, 0x222222);
