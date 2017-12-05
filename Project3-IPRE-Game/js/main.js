@@ -286,7 +286,7 @@ function gameLoop(){
     }
 
     //move light of creation
-    light.move();
+    light.move(dt);
     if (light.y <= 0){
         light.reflectY();
     }
@@ -430,6 +430,8 @@ function end(){
     
     hunger.forEach(h=>gameScene.removeChild(h));
     hunger = [];
+
+    gameScene.removeChild(light);
 
     gameOverScene.visible = true;
     gameScene.visible = false;

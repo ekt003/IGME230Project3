@@ -31,7 +31,7 @@ class Circle extends PIXI.Graphics{
         //this.x += this.fwd.x * this.speed * dt;
         this.y += this.fwd.y * this.speed * dt;
     }
-    moveInCircle(dt=1/10){
+    moveInCircle(dt=1/60){
         this.angle += 0.1;
         this.x += (Math.cos(this.angle) * 1) * this.speed * dt;
         this.y += (Math.sin(this.angle) * 1) * this.speed * dt;
@@ -66,8 +66,8 @@ class LightofCreation extends PIXI.Graphics{
 
     }
 
-    move(){
-        this.y -= 2;
+    move(dt=1/60){
+        this.y -= 2*dt;
     }
     reflectY(){
         this.fwd.y *= -1;
