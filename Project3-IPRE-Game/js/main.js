@@ -314,10 +314,11 @@ function gameLoop(){
             c.isAlive = false;
             decreaseLifeBy(20);
         }
-        if(light.isAlive && c.isAlive && rectsIntersect(c,light)){
+        if((light.isAlive && c.isAlive && rectsIntersect(c,light)) || (light.isAlive && light.y > sceneHeight)){
             console.log("Hunger gets the light");
             light.isAlive = false;
         }
+        
     }
 
     if(light.isAlive && rectsIntersect(light,ship)){
@@ -430,7 +431,7 @@ function end(){
     
     hunger.forEach(h=>gameScene.removeChild(h));
     hunger = [];
-
+    
     gameOverScene.visible = true;
     gameScene.visible = false;
 
