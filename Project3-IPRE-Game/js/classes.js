@@ -36,7 +36,7 @@ class Circle extends PIXI.Graphics{
         this.x += (Math.cos(this.angle) * 1) * this.speed * dt;
         this.y += (Math.sin(this.angle) * 1) * this.speed * dt;
     }
-    moveInCircleRev(dt=1/10){
+    moveInCircleRev(dt=1/60){
         this.angle -= 0.1;
         this.x -= (Math.cos(this.angle) * 1) * this.speed * dt;
         this.y -= (Math.sin(this.angle) * 1) * this.speed * dt;
