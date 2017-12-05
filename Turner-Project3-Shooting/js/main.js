@@ -25,7 +25,7 @@ let circleTimer;
 let levelDifficultly;
 
 let circles = [];
-let aliens = [];
+let hunger = [];
 let score = 0;
 let life = 100;
 let levelNum = 1;
@@ -274,6 +274,19 @@ function gameLoop(){
             c.move(dt);
         }
     }
+    // #3 - gyrate Hunger
+    for(let h of hunger){
+        h.moveInCircle(dt);
+//        if(h.x <= h.radius || h.x >= sceneWidth-h.radius){
+//            h.reflectX();
+//            //c.move(dt);
+//        }
+//        //c.y <= c.radius || 
+//        if(h.y >= sceneHeight-h.radius){
+//            h.reflectY();
+//            h.move(dt);
+//        }
+    }
 	
 	// #5 - Check for Collisions
 	for(let c of circles){
@@ -359,10 +372,62 @@ function createCircles(numCircles){
         
     }
 }
+function createHunger(numHunger){
+    for(let i=0;i<numHunger;i++){
+        let h = new Circle(50, 0x222222);
+        h.x = Math.random() * (sceneWidth - 50) + 25;
+        h.y = sceneHeight - 5 - i;
+        h.angle = i;
+        hunger.push(h);
+        gameScene.addChild(h);  
+    }
+    for(let i=0;i<numHunger/2;i++){
+        let colorTint = Math.floor(Math.random()*(10));
+        let colorSel = 0x000000;
+        switch(colorTint){
+			case 0:
+				colorSel = 0x590000;
+				break;
+			case 1:
+				colorSel = 0x592200;
+				break;
+			case 2:
+				colorSel = 0x594a00;
+				break;
+			case 3:
+				colorSel = 0x475900;
+				break;
+			case 4:
+				colorSel = 0x2c0379;
+				break;
+			case 5:
+				colorSel = 0x00591d;
+				break;
+			case 6:
+				colorSel = 0x003f59;
+				break;
+			case 7:
+				colorSel = 0x002459;
+				break;
+			case 8:
+				colorSel = 0x170059;
+				break;
+			case 9:
+				colorSel = 0x490059;
+				break;
+		}
+    let w = new Circle(10, colorSel);
+        w.x = Math.random() * (sceneWidth - 50) + 25;
+        w.y = sceneHeight - 10 - i;
+        w.angle = i;
+        hunger.push(w);
+        gameScene.addChild(w);
+    }
+}
 
 function loadLevel(){
     createCircles(50);
-    
+    createHunger(40);
     paused = false;
 }
 
@@ -372,6 +437,9 @@ function end(){
     //clear out level
     circles.forEach(c=>gameScene.removeChild(c));
     circles = [];
+    
+    hunger.forEach(h=>gameScene.removeChild(h));
+    hunger = [];
 
     gameOverScene.visible = true;
     gameScene.visible = false;
