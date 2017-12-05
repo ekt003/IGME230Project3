@@ -286,7 +286,7 @@ function gameLoop(){
     }
 
     //move light of creation
-    light.move();
+    light.move(dt);
     if (light.y <= 0){
         light.reflectY();
     }
@@ -435,6 +435,7 @@ function end(){
     
 =======
 
+    gameScene.removeChild(light);
 
 >>>>>>> f96d7f0ee45ef055455ff2d6bba063c8a0530398
     gameOverScene.visible = true;
