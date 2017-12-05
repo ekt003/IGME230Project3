@@ -431,13 +431,9 @@ function end(){
     
     hunger.forEach(h=>gameScene.removeChild(h));
     hunger = [];
-<<<<<<< HEAD
     
-=======
-
     gameScene.removeChild(light);
 
->>>>>>> f96d7f0ee45ef055455ff2d6bba063c8a0530398
     gameOverScene.visible = true;
     gameScene.visible = false;
 
