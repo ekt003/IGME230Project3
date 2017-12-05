@@ -69,4 +69,8 @@ class LightofCreation extends PIXI.Graphics{
     move(){
         this.y -= 2;
     }
+    reflectY(){
+        this.fwd.y *= -1;
+    }
+    
 }

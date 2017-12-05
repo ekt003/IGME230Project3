@@ -285,6 +285,9 @@ function gameLoop(){
 
     //move light of creation
     light.move();
+    if (light.y <= 0){
+        light.reflectY();
+    }
 
     // #3 - gyrate Hunger
     for(let h of hunger){
@@ -409,50 +412,7 @@ function createHunger(numHunger){
         hunger.push(h);
         gameScene.addChild(h);  
     }
-    for(let i=0;i<numHunger/2;i++){
-        let colorTint = Math.floor(Math.random()*(10));
-        let colorSel = 0x000000;
-        switch(colorTint){
-			case 0:
-				colorSel = 0x590000;
-				break;
-			case 1:
-				colorSel = 0x592200;
-				break;
-			case 2:
-				colorSel = 0x594a00;
-				break;
-			case 3:
-				colorSel = 0x475900;
-				break;
-			case 4:
-				colorSel = 0x2c0379;
-				break;
-			case 5:
-				colorSel = 0x00591d;
-				break;
-			case 6:
-				colorSel = 0x003f59;
-				break;
-			case 7:
-				colorSel = 0x002459;
-				break;
-			case 8:
-				colorSel = 0x170059;
-				break;
-			case 9:
-				colorSel = 0x490059;
-				break;
-		}
-    let w = new Circle(10, colorSel);
-        w.x = Math.random() * (sceneWidth - 50) + 25;
-        w.y = sceneHeight - 10 - i;
-        w.angle = i;
-        hunger.push(w);
-        gameScene.addChild(w);
-    }
 }
-
 function loadLevel(){
     createCircles(50);
     createHunger(40);
