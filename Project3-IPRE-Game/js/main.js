@@ -11,6 +11,8 @@ const sceneHeight = app.view.height;
 // pre-load the images
 PIXI.loader.
 add(["images/Spaceship.png"]).
+add(["images/explosions.png"]).
+add(["images/blackOpal.jpg"]).
 on("progress",e=>{console.log(`progress=${e.progress}`)}).
 load(setup);
 
@@ -37,7 +39,7 @@ function setup() {
 	stage = app.stage;
     
     //Create the background Image
-    let sprite = PIXI.Sprite.fromImage('../images/blackOpal.jpg');
+    let sprite = PIXI.Sprite.fromImage('images/blackOpal.jpg');
     sprite.position.x = 0;
     sprite.position.y = 0;
     stage.addChild(sprite);
