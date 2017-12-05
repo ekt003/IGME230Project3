@@ -25,6 +25,7 @@ let gameScene,ship,scoreLabel,lifeLabel,shootSound,hitSound,fireballSound;
 let gameOverScene;
 let circleTimer;
 let levelDifficultly;
+let spriteStart, spriteLoop1,spriteLoop2,spriteLoop3, spriteEnd;
 
 let circles = [];
 let hunger = [];
@@ -39,22 +40,42 @@ function setup() {
 	stage = app.stage;
     
     //Create the background Image
-    let sprite = PIXI.Sprite.fromImage('images/blackOpal.jpg');
-    sprite.position.x = 0;
-    sprite.position.y = 0;
-    stage.addChild(sprite);
+    spriteStart = PIXI.Sprite.fromImage('images/blackOpal.jpg');
+    spriteStart.position.x = 0;
+    spriteStart.position.y = 0;
+    
+    //Create the background Image
+    spriteLoop1 = PIXI.Sprite.fromImage('images/blackOpal.jpg');
+    spriteLoop1.position.x = 0;
+    spriteLoop1.position.y = 0;
+    spriteLoop2 = PIXI.Sprite.fromImage('images/blackOpal.jpg');
+    spriteLoop2.position.x = 0;
+    spriteLoop2.position.y = -sceneHeight;
+    spriteLoop3 = PIXI.Sprite.fromImage('images/blackOpal.jpg');
+    spriteLoop3.position.x = 0;
+    spriteLoop3.position.y = -sceneHeight*2;
+    
+    //Create the background Image
+    spriteEnd = PIXI.Sprite.fromImage('images/blackOpal.jpg');
+    spriteEnd.position.x = 0;
+    spriteEnd.position.y = 0;
     
 	// #1 - Create the `start` scene
 	startScene = new PIXI.Container();
+    startScene.addChild(spriteStart);
     stage.addChild(startScene);
 
 	// #2 - Create the main `game` scene and make it invisible
     gameScene = new PIXI.Container();
+    gameScene.addChild(spriteLoop1);
+    gameScene.addChild(spriteLoop2);
+    gameScene.addChild(spriteLoop3);
     gameScene.visible = false;
     stage.addChild(gameScene);
 
 	// #3 - Create the `gameOver` scene and make it invisible
 	gameOverScene = new PIXI.Container();
+    gameOverScene.addChild(spriteEnd);
     gameOverScene.visible = false;
     stage.addChild(gameOverScene);
 
@@ -222,6 +243,7 @@ function startGame(){
     circleTimer = 0;
     levelDifficultly = 60;//One per 60 ticks
     loadLevel();
+    
     SpawnLight();
 
 }
@@ -257,6 +279,20 @@ function gameLoop(){
 	let dt = 1/app.ticker.FPS;
     if(dt > 1/12) dt=1/12;
 	
+    //Screen scrolling
+    spriteLoop1.position.y += 1
+    if(spriteLoop1.position.y == sceneHeight){
+            spriteLoop1.position.y = -sceneHeight*2
+       }
+    spriteLoop2.position.y += 1
+    if(spriteLoop2.position.y == sceneHeight){
+            spriteLoop2.position.y = -sceneHeight*2
+       }
+    spriteLoop3.position.y += 1
+    if(spriteLoop3.position.y == sceneHeight){
+            spriteLoop3.position.y = -sceneHeight*2
+       }
+    
 	//Move Ship
 	let mousePosition = app.renderer.plugins.interaction.mouse.global;
     
