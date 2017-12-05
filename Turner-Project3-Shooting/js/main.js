@@ -21,6 +21,8 @@ let stage;
 let startScene;
 let gameScene,ship,scoreLabel,lifeLabel,shootSound,hitSound,fireballSound;
 let gameOverScene;
+let circleTimer;
+let levelDifficultly;
 
 let circles = [];
 let aliens = [];
@@ -33,6 +35,13 @@ let keyObject = keyboard(asciiKeyCodeNumber);
 
 function setup() {
 	stage = app.stage;
+    
+    //Create the background Image
+    let sprite = PIXI.Sprite.fromImage('../images/blackOpal.jpg');
+    sprite.position.x = 0;
+    sprite.position.y = 0;
+    stage.addChild(sprite);
+    
 	// #1 - Create the `start` scene
 	startScene = new PIXI.Container();
     stage.addChild(startScene);
@@ -77,44 +86,44 @@ function createLabelsAndButtons(){
     let buttonStyle = new PIXI.TextStyle({
         fill:0xFFFFFF,
         fontSize: 36,
-        fontFamily: "Verdana",
+        fontFamily: "Consolas",
         stroke: 0x9900FF,
         strokeThickness: 4
     });
 
     //1 - set up `startScene`
     //1A - make the top start label
-    let startLabel1 = new PIXI.Text("Project IPRE:");
+    let startLabel1 = new PIXI.Text("Project IPRE");
     startLabel1.style = new PIXI.TextStyle({
         fill:0xFFFFFF,
         fontSize: 48,
-        fontFamily: "Verdana",
+        fontFamily: "Consolas",
         stroke: 0x9900FF,
         strokeThickness: 4
     });
 
-    startLabel1.x = 50;
+    startLabel1.x = 150;
     startLabel1.y = 120;
     startScene.addChild(startLabel1);
 
     //1B - make the middle start label
-    let startLabel2 = new PIXI.Text("R U worthy..?");
+    let startLabel2 = new PIXI.Text("Ready to explore the universe?");
     startLabel2.style = new PIXI.TextStyle({
         fill:0xFFFFFF,
-        fontSize: 48,
-        fontFamily: "Verdana",
+        fontSize: 28,
+        fontFamily: "Consolas",
         stroke: 0x9900FF,
         strokeThickness: 4
     });
 
-    startLabel2.x = 185;
+    startLabel2.x = 80;
     startLabel2.y = 300;
     startScene.addChild(startLabel2);
 
     //1C - make the start game button
-    let startButton = new PIXI.Text("Enter, ... if you dare!");
+    let startButton = new PIXI.Text("Start Research");
     startButton.style = buttonStyle;
-    startButton.x = 80;
+    startButton.x = 170;
     startButton.y = sceneHeight-100;
     startButton.interactive = true;
     startButton.buttonMode = true;
@@ -128,7 +137,7 @@ function createLabelsAndButtons(){
     let textStyle = new PIXI.TextStyle({
         fill:0xFFFFFF,
         fontSize: 18,
-        fontFamily: "Verdana",
+        fontFamily: "Consolas",
         stroke: 0x9900FF,
         strokeThickness: 4
     });
@@ -156,7 +165,7 @@ function createLabelsAndButtons(){
     textStyle = new PIXI.TextStyle({
         fill: 0xFFFFFF,
         fontSize: 64,
-        fontFamily: "Verdana",
+        fontFamily: "Consolas",
         stroke: 0xFF0000,
         strokeThickness: 6
     });
@@ -164,28 +173,28 @@ function createLabelsAndButtons(){
     
 
     gameOverText.style = textStyle;
-    gameOverText.x = 100;
+    gameOverText.x = 35;
     gameOverText.y = sceneHeight/2 - 160;
     gameOverScene.addChild(gameOverText);
 
 
     textStyle = new PIXI.TextStyle({
         fill: 0xFFFFFF,
-        fontSize: 36,
-        fontFamily: "Verdana",
-        stroke: 0xFF0000,
+        fontSize: 30 ,
+        fontFamily: "Consolas",
+        stroke: 0x9900FF,
         strokeThickness: 4
     })
 
     gameOverScoreLabel.style = textStyle;
-    gameOverScoreLabel.x = 150;
+    gameOverScoreLabel.x = 50;
     gameOverScoreLabel.y = sceneHeight/2 + 50;
     gameOverScene.addChild(gameOverScoreLabel);
 
     //make "play again" button
-    let playAgainButton = new PIXI.Text("Play Again?");
+    let playAgainButton = new PIXI.Text("Try the next cycle");
     playAgainButton.style = buttonStyle;
-    playAgainButton.x = 150;
+    playAgainButton.x = 120;
     playAgainButton.y = sceneHeight - 100;
     playAgainButton.interactive = true;
     playAgainButton.buttonMode = true;
@@ -208,6 +217,8 @@ function startGame(){
     decreaseLifeBy(0);
     ship.x = 300;
     ship.y = 450;
+    circleTimer = 0;
+    levelDifficultly = 60;//One per 60 ticks
     loadLevel();
 
 }
@@ -221,6 +232,11 @@ function decreaseLifeBy(value){
     life -= value;
     life = parseInt(life);
     lifeLabel.text = `Life   ${life}%`;
+}
+
+function SpawnCircle(){
+    console.log("Spawn 1 hungery boi")
+    createCircles(1);
 }
 
 function gameLoop(){
@@ -250,10 +266,10 @@ function gameLoop(){
         c.move(dt);
         if(c.x <= c.radius || c.x >= sceneWidth-c.radius){
             c.reflectX();
-            c.move(dt);
+            //c.move(dt);
         }
-
-        if(c.y <= c.radius || c.y >= sceneHeight-c.radius){
+        //c.y <= c.radius || 
+        if(c.y >= sceneHeight-c.radius){
             c.reflectY();
             c.move(dt);
         }
@@ -268,6 +284,16 @@ function gameLoop(){
             c.isAlive = false;
             decreaseLifeBy(20);
         }
+    }
+    
+    //Increase timer
+    circleTimer += 1;
+    //console.log(circleTimer)
+    //spawn circle
+    if(circleTimer == levelDifficultly){
+        //console.log(circleTimer)
+        SpawnCircle();
+        circleTimer = 0;
     }
 
 
@@ -336,6 +362,7 @@ function createCircles(numCircles){
 
 function loadLevel(){
     createCircles(50);
+    
     paused = false;
 }
 
@@ -349,6 +376,6 @@ function end(){
     gameOverScene.visible = true;
     gameScene.visible = false;
 
-    gameOverScoreLabel.text = `Your final score: ${score}`;
+    gameOverScoreLabel.text = `You saved ${score} Lights of Creation`;
 }
 

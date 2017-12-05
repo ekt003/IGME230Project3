@@ -25,14 +25,14 @@ class Circle extends PIXI.Graphics{
     }
 
     move(dt=1/10){
-        this.x += this.fwd.x * this.speed * dt;
+        //this.x += this.fwd.x * this.speed * dt;
         this.y += this.fwd.y * this.speed * dt;
     }
 
-    reflectX(){
-        this.fwd.x *= -1;
-    }
-
+//    reflectX(){
+//        this.fwd.x *= -1;
+//    }
+//
     reflectY(){
         this.fwd.y *= -1;
     }
