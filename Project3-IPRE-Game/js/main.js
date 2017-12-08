@@ -352,6 +352,10 @@ function gameLoop(){
         }
         if((light.isAlive && c.isAlive && rectsIntersect(c,light)) || (light.isAlive && light.y > sceneHeight)){
             console.log("Hunger gets the light");
+            levelDifficultly -= 2;
+            if(levelDifficultly <= 2){
+                levelDifficultly = 2;
+            }
             light.isAlive = false;
         }
         
@@ -453,7 +457,7 @@ function createHunger(numHunger){
     }
 }
 function loadLevel(){
-    createCircles(50);
+    createCircles(20);
     createHunger(40);
     paused = false;
 }
