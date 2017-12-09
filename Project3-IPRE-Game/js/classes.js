@@ -10,7 +10,7 @@ class Ship extends PIXI.Sprite{
 }
 
 class Circle extends PIXI.Graphics{
-    constructor(radius, color=0xFF0000, x=0, y=0,angle=0.0){
+    constructor(radius, color=0xFF0000, speed=50, x=0, y=0,angle=0.0){
         super();
         this.beginFill(color);
         this.drawCircle(0,0,radius);
@@ -22,7 +22,7 @@ class Circle extends PIXI.Graphics{
 
         //variables
         this.fwd = getRandomUnitVector();
-        this.speed = 50;
+        this.speed = speed;
         this.isAlive = true;
         this.angle = angle;
     }

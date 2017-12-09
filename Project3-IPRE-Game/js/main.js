@@ -35,7 +35,7 @@ let levelNum = 1;
 let paused = true;
 let gameOverScoreLabel;
 let light;
-
+let hungerSpeed;
 function setup() {
 	stage = app.stage;
     
@@ -236,6 +236,7 @@ function startGame(){
     levelNum = 1;
     score = 0;
     life = 100;
+    hungerSpeed = 50;
     increaseScoreBy(0);
     decreaseLifeBy(0);
     ship.x = 300;
@@ -352,6 +353,7 @@ function gameLoop(){
         }
         if((light.isAlive && c.isAlive && rectsIntersect(c,light)) || (light.isAlive && light.y > sceneHeight)){
             console.log("Hunger gets the light");
+            hungerSpeed +=10;
             levelDifficultly -= 2;
             if(levelDifficultly <= 2){
                 levelDifficultly = 2;
@@ -370,9 +372,11 @@ function gameLoop(){
     //Increase timer
     circleTimer += 1;
     //console.log(circleTimer)
+    console.log("Difficulty: "+levelDifficultly)
+        console.log("Timer: "+circleTimer)
     //spawn circle
-    if(circleTimer == levelDifficultly){
-        //console.log(circleTimer)
+    if(circleTimer >= levelDifficultly){
+        
         SpawnCircle();
         circleTimer = 0;
     }
@@ -436,7 +440,7 @@ function createCircles(numCircles){
 				break;
 		}
         
-        let c = new Circle(10, colorSel);
+        let c = new Circle(10, colorSel,hungerSpeed);
         c.x = Math.random() * (sceneWidth - 50) + 25;
         c.y = sceneHeight - 25;
         
@@ -448,7 +452,7 @@ function createCircles(numCircles){
 
 function createHunger(numHunger){
     for(let i=0;i<numHunger;i++){
-        let h = new Circle(50, 0x222222);
+        let h = new Circle(50, 0x111111);
         h.x = Math.random() * (sceneWidth - 50) + 25;
         h.y = sceneHeight - 5 - i;
         h.angle = i;
