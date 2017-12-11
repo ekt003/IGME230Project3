@@ -159,6 +159,90 @@ function setup() {
 	// Clicking the button calls startGame()
 }
 
+function displayInstructions(){
+    startScene.visible = false;
+    instScene.visible = true;
+    gameOverScene.visible = false;
+    gameScene.visible = false;
+
+    buttonStyle = new PIXI.TextStyle({
+        fill:0xFFFFFF,
+        fontSize: 36,
+        fontFamily: "Consolas",
+        stroke: 0x9900FF,
+        strokeThickness: 4
+    });
+
+    //make the to game button
+    let startButton = new PIXI.Text("Start Research");
+    startButton.style = buttonStyle;
+    startButton.x = 170;
+    startButton.y = sceneHeight-70;
+    startButton.interactive = true;
+    startButton.buttonMode = true;
+    startButton.on("pointerup",startGame); //function reference
+    startButton.on("pointerover",e=>e.target.alpha = 0.7); //arrow function
+    startButton.on("pointerout",e=>e.currentTarget.alpha = 1.0); //arrow function
+
+    instScene.addChild(startButton);
+
+    //make the top label
+    let titleLabel = new PIXI.Text("Instructions");
+    titleLabel.style = new PIXI.TextStyle({
+        fill:0xFFFFFF,
+        fontSize: 48,
+        fontFamily: "Consolas",
+        stroke: 0x9900FF,
+        strokeThickness: 4
+    });
+
+    titleLabel.x = 150;
+    titleLabel.y = 50;
+    instScene.addChild(titleLabel);
+
+    //make the instructions
+    let instStyle = new PIXI.TextStyle({
+        fill:0xFFFFFF,
+        fontSize: 22,
+        fontFamily: "Consolas",
+        stroke: 0x9900FF,
+        strokeThickness: 4
+    })
+
+    let instList = [];
+
+    //this was as non-DRY as I could since they all needed custom x and y positions and different content for each line
+    instList.push(createNewLine(40, 120, "Navigate your ship around the screen using", instStyle));
+    instList.push(createNewLine(40, 150, "the mouse. Chase the bright white Light of", instStyle));
+    instList.push(createNewLine(35, 180, "Creation when it spawns and avoid being hit", instStyle));
+    instList.push(createNewLine(35, 210, "by the colorful particles emanating from the ", instStyle));
+    instList.push(createNewLine(30, 240, "monstrous hunger at the bottom of the screen.", instStyle));
+
+    instList.push(createNewLine(40, 300, "If the Hunger’s particles consume the light", instStyle));
+    instList.push(createNewLine(65, 330, "before you can reach it, it grows more", instStyle));
+    instList.push(createNewLine(45, 360, "powerful and the light becomes even harder ", instStyle));
+    instList.push(createNewLine(65, 390, "to retrieve. Getting hit by the Hunger ", instStyle));
+    instList.push(createNewLine(45, 420, "damages the integrity of the ship. Try to ", instStyle));
+    instList.push(createNewLine(60, 450, "retrieve enough Light before your luck ", instStyle));
+    instList.push(createNewLine(170, 480, "(and ship) run out.", instStyle));
+
+    for(let label of instList){
+        instScene.addChild(label);
+    }
+
+    
+}
+
+//adds another line to the instructions
+function createNewLine(xPos, yPos, content, style){
+    let instLabel = new PIXI.Text(content);
+    instLabel.style = style;
+    instLabel.x = xPos;
+    instLabel.y = yPos;
+
+    return instLabel;
+}
+
 function createStartLabelsAndButtons(){
     buttonStyle = new PIXI.TextStyle({
         fill:0xFFFFFF,
@@ -394,14 +478,7 @@ function startGame(){
 
 }
 
-function displayInstructions(){
-    startScene.visible = false;
-    instScene.visible = true;
-    gameOverScene.visible = false;
-    gameScene.visible = false;
 
-
-}
 
 function increaseScoreBy(value){
     score += value;
