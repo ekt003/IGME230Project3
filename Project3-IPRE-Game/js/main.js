@@ -10,9 +10,10 @@ const sceneHeight = app.view.height;
 
 // pre-load the images
 PIXI.loader.
-add(["images/Spaceship.png"]).
+add(["images/Starblaster.png"]).
 add(["images/explosions.png"]).
 add(["images/blackOpal.jpg"]).
+add(["images/light.png"]).
 on("progress",e=>{console.log(`progress=${e.progress}`)}).
 load(setup);
 
@@ -21,21 +22,30 @@ let stage;
 
 // game variables
 let startScene;
-let gameScene,ship,scoreLabel,lifeLabel,shootSound,hitSound,fireballSound;
+let gameScene,ship,scoreLabel,lifeLabel, alertLabel, alertItem,shootSound,hitSound,fireballSound;
 let gameOverScene;
+let winScene;
 let circleTimer;
 let levelDifficultly;
-let spriteStart, spriteLoop1,spriteLoop2,spriteLoop3, spriteEnd;
+let spriteStart, spriteLoop1,spriteLoop2,spriteLoop3, spriteEnd, spriteWin;
+let buttonStyle;
+
 
 let circles = [];
 let hunger = [];
 let score = 0;
 let life = 100;
 let levelNum = 1;
+let alertLife = 200;
 let paused = true;
-let gameOverScoreLabel;
+let gameOverScoreLabel,highScoreLabel,winScoreLabel,winHighScoreLabel;
 let light;
 let hungerSpeed;
+let backgroundMusic;
+let alertText,alertTimer;
+let highScore;
+let win;
+
 function setup() {
 	stage = app.stage;
     
@@ -60,6 +70,11 @@ function setup() {
     spriteEnd.position.x = 0;
     spriteEnd.position.y = 0;
     
+    //Create the background Image
+    spriteWin = PIXI.Sprite.fromImage('images/blackOpal.jpg');
+    spriteWin.position.x = 0;
+    spriteWin.position.y = 0;
+    
 	// #1 - Create the `start` scene
 	startScene = new PIXI.Container();
     startScene.addChild(spriteStart);
@@ -73,14 +88,22 @@ function setup() {
     gameScene.visible = false;
     stage.addChild(gameScene);
 
-	// #3 - Create the `gameOver` scene and make it invisible
+	// #3a - Create the `gameOver` scene and make it invisible
 	gameOverScene = new PIXI.Container();
     gameOverScene.addChild(spriteEnd);
     gameOverScene.visible = false;
     stage.addChild(gameOverScene);
+    
+    // #3b - Create the `Win` scene and make it invisible
+	winScene = new PIXI.Container();
+    winScene.addChild(spriteWin);
+    winScene.visible = false;
+    stage.addChild(winScene);
 
 	// #4 - Create labels for all 3 scenes
-	createLabelsAndButtons();
+    createStartLabelsAndButtons();
+    createEndLabelsAndButtons();
+    createWinLabelsAndButtons();
 
 	// #5 - Create ship
     ship = new Ship();
@@ -97,16 +120,21 @@ function setup() {
     fireballSound = new Howl({
         src:['sounds/fireball.mp3']
     });
+    backgroundMusic = new Howl({
+        src:['sounds/starblaster.wav'],
+        loop: true,
+        volume: 0.5
+    });
+    	
 
 	// #8 - Start update loop
 	app.ticker.add(gameLoop);
-
 	// Now our `startScene` is visible
 	// Clicking the button calls startGame()
 }
 
-function createLabelsAndButtons(){
-    let buttonStyle = new PIXI.TextStyle({
+function createStartLabelsAndButtons(){
+    buttonStyle = new PIXI.TextStyle({
         fill:0xFFFFFF,
         fontSize: 36,
         fontFamily: "Consolas",
@@ -155,6 +183,8 @@ function createLabelsAndButtons(){
     startButton.on("pointerout",e=>e.currentTarget.alpha = 1.0); //arrow function
 
     startScene.addChild(startButton);
+}
+function createGameLabelsAndButtons(){
 
     //set up `gameScene`
     let textStyle = new PIXI.TextStyle({
@@ -169,23 +199,37 @@ function createLabelsAndButtons(){
     scoreLabel = new PIXI.Text();
     scoreLabel.style = textStyle;
     scoreLabel.x = 5;
-    scoreLabel.y = 5;
+    scoreLabel.y = 580;
     gameScene.addChild(scoreLabel);
     increaseScoreBy(0);
 
     //make life label
     lifeLabel = new PIXI.Text();
     lifeLabel.style = textStyle;
-    lifeLabel.x = 5;
-    lifeLabel.y = 26;
+    lifeLabel.x = 150;
+    lifeLabel.y = 580;
     gameScene.addChild(lifeLabel);
     decreaseLifeBy(0);
+    
+    //make the blaster alert system
+    alertLabel = new PIXI.Text("==Starblaster Coms System==");
+    alertLabel.style = textStyle;
+    alertLabel.x = 180;
+    alertLabel.y = 520;
+    gameScene.addChild(alertLabel);
+    
+    //make the blaster alert system item
+    alertItem = new PIXI.Text("");
+    alertItem.style = textStyle;
+    alertItem.x = 190;
+    alertItem.y = 550;
+    gameScene.addChild(alertItem);
 
-    let gameOverText = new PIXI.Text(`The Hunger Wins`);
-
-    gameOverScoreLabel = new PIXI.Text();
-
-    textStyle = new PIXI.TextStyle({
+}
+function createEndLabelsAndButtons(){
+    
+    //Red Style
+    let textStyle = new PIXI.TextStyle({
         fill: 0xFFFFFF,
         fontSize: 64,
         fontFamily: "Consolas",
@@ -193,14 +237,14 @@ function createLabelsAndButtons(){
         strokeThickness: 6
     });
 
-    
-
+    //GAME OVER
+    let gameOverText = new PIXI.Text(`The Hunger Wins`);
     gameOverText.style = textStyle;
     gameOverText.x = 35;
     gameOverText.y = sceneHeight/2 - 160;
     gameOverScene.addChild(gameOverText);
 
-
+    //Purpel syle
     textStyle = new PIXI.TextStyle({
         fill: 0xFFFFFF,
         fontSize: 30 ,
@@ -208,12 +252,19 @@ function createLabelsAndButtons(){
         stroke: 0x9900FF,
         strokeThickness: 4
     })
-
+    
+    gameOverScoreLabel = new PIXI.Text();
     gameOverScoreLabel.style = textStyle;
     gameOverScoreLabel.x = 50;
     gameOverScoreLabel.y = sceneHeight/2 + 50;
     gameOverScene.addChild(gameOverScoreLabel);
-
+    
+    highScoreLabel = new PIXI.Text();
+    highScoreLabel.style = textStyle;
+    highScoreLabel.x = 50;
+    highScoreLabel.y = sceneHeight/2 + 100;
+    gameOverScene.addChild(highScoreLabel);
+    
     //make "play again" button
     let playAgainButton = new PIXI.Text("Try the next cycle");
     playAgainButton.style = buttonStyle;
@@ -228,20 +279,74 @@ function createLabelsAndButtons(){
 
 
 }
+function createWinLabelsAndButtons(){
+    
+    //Red Style
+    let textStyle = new PIXI.TextStyle({
+        fill: 0xFFFFFF,
+        fontSize: 64,
+        fontFamily: "Consolas",
+        stroke: 0xFFFF00,
+        strokeThickness: 6
+    });
+
+    //GAME OVER
+    let winText = new PIXI.Text(`You Saved the Light!`);
+    winText.style = textStyle;
+    winText.x = 35;
+    winText.y = sceneHeight/2 - 160;
+    winScene.addChild(winText);
+
+    //Purpel syle
+    textStyle = new PIXI.TextStyle({
+        fill: 0xFFFFFF,
+        fontSize: 30 ,
+        fontFamily: "Consolas",
+        stroke: 0x9900FF,
+        strokeThickness: 4
+    })
+    
+    winScoreLabel = new PIXI.Text();
+    winScoreLabel.style = textStyle;
+    winScoreLabel.x = 50;
+    winScoreLabel.y = sceneHeight/2 + 50;
+    winScene.addChild(winScoreLabel);
+    
+    winHighScoreLabel = new PIXI.Text("You are the best!");
+    winHighScoreLabel.style = textStyle;
+    winHighScoreLabel.x = 50;
+    winHighScoreLabel.y = sceneHeight/2 + 100;
+    winScene.addChild(winHighScoreLabel);
+    
+    //make "play again" button
+    let playAgainButton = new PIXI.Text("Remember your journey");
+    playAgainButton.style = buttonStyle;
+    playAgainButton.x = 120;
+    playAgainButton.y = sceneHeight - 100;
+    playAgainButton.interactive = true;
+    playAgainButton.buttonMode = true;
+    playAgainButton.on("pointerup", startGame);
+    playAgainButton.on("pointerover",e=>e.target.alpha = 0.7);
+    playAgainButton.on('pointerout',e=>e.currentTarget.alpha = 1.0);
+    winScene.addChild(playAgainButton);
+
+
+}
 
 function startGame(){
     startScene.visible = false;
     gameOverScene.visible = false;
     gameScene.visible = true;
+    win = false;
+
     levelNum = 1;
     score = 0;
     life = 100;
     hungerSpeed = 50;
-    increaseScoreBy(0);
-    decreaseLifeBy(0);
     ship.x = 300;
     ship.y = 450;
     circleTimer = 0;
+    alertTimer = alertLife;
     levelDifficultly = 60;//One per 60 ticks
     loadLevel();
     
@@ -252,6 +357,7 @@ function startGame(){
 function increaseScoreBy(value){
     score += value;
     scoreLabel.text = `Score   ${score}`;
+    
 }
 
 function decreaseLifeBy(value){
@@ -259,16 +365,36 @@ function decreaseLifeBy(value){
     life = parseInt(life);
     lifeLabel.text = `Life   ${life}%`;
 }
-
+function setAlertItem(input){
+    
+    alertText = input;
+    alertTimer = 0;
+    
+}
+function checkAlertItem(){
+//Increase timer
+    
+    //console.log(circleTimer)
+    //console.log("Alert: "+alertTimer)
+    //spawn circle
+    if(alertTimer < alertLife){
+        alertTimer += 1;
+        alertItem.text = alertText;   
+    }
+    else{
+        alertItem.text = "...";
+    }
+}
 function SpawnCircle(){
     console.log("Spawn 1 hungery boi")
     createCircles(1);
 }
 
 function SpawnLight(){
-    let c = new Circle(10,0xFFFFFF);
+//    let c = new LightofCreation(10,0xFFFFFF);
+    let c = new LightofCreation2();
     c.x = Math.floor(Math.random()*(sceneWidth));
-    c.y = 20;
+    c.y = -20;
     light = c;
     gameScene.addChild(light);
 }
@@ -281,15 +407,15 @@ function gameLoop(){
     if(dt > 1/12) dt=1/12;
 	
     //Screen scrolling
-    spriteLoop1.position.y += 1
+    spriteLoop1.position.y += 3;
     if(spriteLoop1.position.y == sceneHeight){
             spriteLoop1.position.y = -sceneHeight*2
        }
-    spriteLoop2.position.y += 1
+    spriteLoop2.position.y += 3;
     if(spriteLoop2.position.y == sceneHeight){
             spriteLoop2.position.y = -sceneHeight*2
        }
-    spriteLoop3.position.y += 1
+    spriteLoop3.position.y += 3;
     if(spriteLoop3.position.y == sceneHeight){
             spriteLoop3.position.y = -sceneHeight*2
        }
@@ -352,7 +478,9 @@ function gameLoop(){
             decreaseLifeBy(20);
         }
         if((light.isAlive && c.isAlive && rectsIntersect(c,light)) || (light.isAlive && light.y > sceneHeight)){
-            console.log("Hunger gets the light");
+            //console.log("Hunger gets the light");
+            let hAlert = "The Hunger consumed the light!";
+            setAlertItem(hAlert);
             hungerSpeed +=10;
             levelDifficultly -= 2;
             if(levelDifficultly <= 2){
@@ -364,23 +492,28 @@ function gameLoop(){
     }
 
     if(light.isAlive && rectsIntersect(light,ship)){
-        console.log("The IPRE gains the light!");
+        //console.log("The IPRE gains the light!");
+        let lAlert = "The IPRE gains the light!";
+        setAlertItem(lAlert);
         increaseScoreBy(1);
+        recordHighScore(score);
         light.isAlive = false;
     }
     
     //Increase timer
     circleTimer += 1;
     //console.log(circleTimer)
-    console.log("Difficulty: "+levelDifficultly)
-        console.log("Timer: "+circleTimer)
+    //console.log("Difficulty: "+levelDifficultly)
+    //console.log("Timer: "+circleTimer)
     //spawn circle
     if(circleTimer >= levelDifficultly){
         
         SpawnCircle();
         circleTimer = 0;
     }
-
+    
+    //set alert system
+    checkAlertItem();
 
 	// #6 - Now do some clean up
 	if(!light.isAlive){
@@ -390,6 +523,11 @@ function gameLoop(){
 
 	// #7 - Is game over?
 	if(life <= 0){
+        end();
+        return;
+    }
+    if(score == 100){
+        win = true;
         end();
         return;
     }
@@ -461,11 +599,30 @@ function createHunger(numHunger){
     }
 }
 function loadLevel(){
+    score = 0;
     createCircles(20);
     createHunger(40);
+    backgroundMusic.play();
+    createGameLabelsAndButtons();
+    increaseScoreBy(0);
+    decreaseLifeBy(0);
     paused = false;
 }
-
+function recordHighScore(scoreIn){
+    loadHighScore();
+    if(scoreIn>highScore){
+        let save = localStorage.setItem("--IPRE-SCORE--",scoreIn);
+    }
+}
+function loadHighScore(){
+    highScore = localStorage.getItem("--IPRE-SCORE--");
+    if(!highScore){
+        highScore = 0;
+    }
+    else{
+        highScore = JSON.parse(highScore);
+    }
+}
 function end(){
     paused = true;
 
@@ -475,12 +632,20 @@ function end(){
     
     hunger.forEach(h=>gameScene.removeChild(h));
     hunger = [];
-    
     gameScene.removeChild(light);
 
-    gameOverScene.visible = true;
+    if(win){
+         winScene.visible = true;
+    }
+    
+    else{
+        gameOverScene.visible = true;
+    }
     gameScene.visible = false;
+    backgroundMusic.stop();
 
     gameOverScoreLabel.text = `You saved ${score} Lights of Creation`;
+    loadHighScore();
+    highScoreLabel.text = `Best cycle: ${highScore}`;
 }
 
