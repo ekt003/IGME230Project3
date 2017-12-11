@@ -49,6 +49,7 @@ let win;
 
 let shield;
 let shieldState;
+let shieldTimer;
 
 function setup() {
 	stage = app.stage;
@@ -141,7 +142,8 @@ function setup() {
     shield.y = ship.y;
     shield.visible = false;
     gameScene.addChild(shield);
-    shieldState = true;
+    shieldState = false;
+    shieldTimer = 0;
 	
 	// Load Sounds
     shootSound = new Howl({
@@ -599,6 +601,13 @@ function gameLoop(){
     //determines if shield is active
     if(shieldState){
         shield.visible = true;
+        shieldTimer++;
+    }
+
+    if(shieldTimer > 100){
+        shieldState = false;
+        shieldTimer = 0;
+        shield.visible = false;
     }
     
 	// #3 - Move Circles
@@ -654,11 +663,28 @@ function gameLoop(){
 
     //ship and light collision detection
     if(light.isAlive && circIntersect(light,ship)){
-        let lAlert = "The IPRE gains the light!";
+
+        let randInt = Math.floor(Math.random()*(5));
+
+        if(randInt == 3){
+            shieldState = true;
+        }
+
+        let lAlert;
+
+        if(shieldState){ //special text for getting a shield boost
+            lAlert = "The IPRE makes a shield from the light!";
+        }
+        else{
+            lAlert = "The IPRE gains the light!";
+        }
+        
         setAlertItem(lAlert);
         increaseScoreBy(1);
         recordHighScore(score);
         light.isAlive = false;
+
+
     }
     
     //Increase timer
