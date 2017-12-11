@@ -25,6 +25,7 @@ let gameScene,ship,scoreLabel,lifeLabel,shootSound,hitSound,fireballSound;
 let gameOverScene;
 let circleTimer;
 let levelDifficultly;
+let BG,BG2,BG3;
 
 let circles = [];
 let hunger = [];
@@ -39,10 +40,22 @@ function setup() {
 	stage = app.stage;
     
     //Create the background Image
-    let sprite = PIXI.Sprite.fromImage('images/blackOpal.jpg');
-    sprite.position.x = 0;
-    sprite.position.y = 0;
-    stage.addChild(sprite);
+    BG = PIXI.Sprite.fromImage('images/blackOpal.jpg');
+    BG.position.x = 0;
+    BG.position.y = 0;
+    stage.addChild(BG);
+    
+    //Create the background Image2
+    BG2 = PIXI.Sprite.fromImage('images/blackOpal.jpg');
+    BG2.position.x = 0;
+    BG2.position.y = -sceneHeight;
+    stage.addChild(BG2);
+    
+    //Create the background Image3
+    BG3 = PIXI.Sprite.fromImage('images/blackOpal.jpg');
+    BG3.position.x = 0;
+    BG3.position.y = sceneHeight;
+    stage.addChild(BG3);
     
 	// #1 - Create the `start` scene
 	startScene = new PIXI.Container();
@@ -272,6 +285,21 @@ function gameLoop(){
     ship.x = clamp(newX,0+w2,sceneWidth-w2);
     ship.y = clamp(newY,0+h2,sceneHeight-h2);
 	
+    //BG scrolling
+//    BG.position.y += .1;
+//    BG2.position.y += .1;
+//    BG3.position.y += .1;
+//    if(BG.position.y <= sceneHeight){
+//        BG.position.y = -sceneHeight*2;
+//    }
+//    if(BG2.position.y <= sceneHeight){
+//        BG2.position.y = -sceneHeight*2;
+//    }
+//    if(BG3.position.y <= sceneHeight){
+//        BG3.position.y = -sceneHeight*2;
+//    }
+
+    
 	// #3 - Move Circles
     for(let c of circles){
         c.move(dt);
