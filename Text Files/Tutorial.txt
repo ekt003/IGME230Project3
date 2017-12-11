@@ -1,0 +1,5 @@
+Tutorial
+Navigate your ship around the screen using the mouse. Chase the bright white Light of Creation when it spawns and avoid being hit by the colorful particles emanating from the monstrous hunger at the bottom of the screen.
+If the Hunger’s particles consume the light before you can reach it, it grows more powerful and the light becomes even harder to retrieve. Getting hit by the Hunger damages the integrity of the ship. Try to retrieve enough Light before your luck (and ship) run out.
+
+

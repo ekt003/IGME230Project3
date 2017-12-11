@@ -22,6 +22,7 @@ let stage;
 
 // game variables
 let startScene;
+let instScene;
 let gameScene,ship,scoreLabel,lifeLabel, alertLabel, alertItem,shootSound,hitSound,fireballSound;
 let gameOverScene;
 let winScene;
@@ -45,6 +46,8 @@ let backgroundMusic;
 let alertText,alertTimer;
 let highScore;
 let win;
+
+let shieldState;
 
 function setup() {
 	stage = app.stage;
@@ -87,17 +90,17 @@ function setup() {
     spriteEnd.position.x = 0;
     spriteEnd.position.y = 0;
     
-    //Create the background Image
+    // Create the background Image
     spriteWin = PIXI.Sprite.fromImage('images/blackOpal.jpg');
     spriteWin.position.x = 0;
     spriteWin.position.y = 0;
     
-	// #1 - Create the `start` scene
+	// Create the `start` scene
 	startScene = new PIXI.Container();
     startScene.addChild(spriteStart);
     stage.addChild(startScene);
 
-	// #2 - Create the main `game` scene and make it invisible
+	// Create the main `game` scene and make it invisible
     gameScene = new PIXI.Container();
     gameScene.addChild(spriteLoop1);
     gameScene.addChild(spriteLoop2);
@@ -105,7 +108,12 @@ function setup() {
     gameScene.visible = false;
     stage.addChild(gameScene);
 
-	// #3a - Create the `gameOver` scene and make it invisible
+    // Create the `instructions` scene and make it invisible
+    instScene = new PIXI.Container();
+    instScene.visible = false;
+    stage.addChild(instScene);
+
+	// Create the `gameOver` scene and make it invisible
 	gameOverScene = new PIXI.Container();
     gameOverScene.addChild(spriteEnd);
     gameOverScene.visible = false;
@@ -122,9 +130,10 @@ function setup() {
     createEndLabelsAndButtons();
     createWinLabelsAndButtons();
 
-	// #5 - Create ship
+	// #5 - Create ship and set shields
     ship = new Ship();
     gameScene.addChild(ship);
+    shieldState = false;
 	
 	// #6 - Load Sounds
     shootSound = new Howl({
@@ -192,7 +201,7 @@ function createStartLabelsAndButtons(){
     let startButton = new PIXI.Text("Start Research");
     startButton.style = buttonStyle;
     startButton.x = 170;
-    startButton.y = sceneHeight-100;
+    startButton.y = sceneHeight-200;
     startButton.interactive = true;
     startButton.buttonMode = true;
     startButton.on("pointerup",startGame); //function reference
@@ -200,6 +209,19 @@ function createStartLabelsAndButtons(){
     startButton.on("pointerout",e=>e.currentTarget.alpha = 1.0); //arrow function
 
     startScene.addChild(startButton);
+
+    //make the tutorial game button
+    let tutorialButton = new PIXI.Text("How to Play");
+    tutorialButton.style = buttonStyle;
+    tutorialButton.x = 200;
+    tutorialButton.y = sceneHeight-150;
+    tutorialButton.interactive = true;
+    tutorialButton.buttonMode = true;
+    tutorialButton.on("pointerup",displayInstructions); //function reference
+    tutorialButton.on("pointerover",e=>e.target.alpha = 0.7); //arrow function
+    tutorialButton.on("pointerout",e=>e.currentTarget.alpha = 1.0); //arrow function
+
+    startScene.addChild(tutorialButton);
 }
 function createGameLabelsAndButtons(){
 
@@ -352,6 +374,7 @@ function createWinLabelsAndButtons(){
 
 function startGame(){
     startScene.visible = false;
+    instScene.visible = false;
     gameOverScene.visible = false;
     gameScene.visible = true;
     win = false;
@@ -368,6 +391,15 @@ function startGame(){
     loadLevel();
     
     SpawnLight();
+
+}
+
+function displayInstructions(){
+    startScene.visible = false;
+    instScene.visible = true;
+    gameOverScene.visible = false;
+    gameScene.visible = false;
+
 
 }
 
@@ -507,7 +539,10 @@ function gameLoop(){
             hitSound.play();
             gameScene.removeChild(c);
             c.isAlive = false;
-            decreaseLifeBy(20);
+            if(!shieldState){
+                decreaseLifeBy(20);
+            }
+            
         }
         if((light.isAlive && c.isAlive && rectsIntersect(c,light)) || (light.isAlive && light.y > sceneHeight)){
             //console.log("Hunger gets the light");
