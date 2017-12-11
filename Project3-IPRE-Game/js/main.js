@@ -11,9 +11,9 @@ const sceneHeight = app.view.height;
 // pre-load the images
 PIXI.loader.
 add(["images/Starblaster.png"]).
-add(["images/explosions.png"]).
 add(["images/blackOpal.jpg"]).
 add(["images/light.png"]).
+add(["images/lucretiaShield.png"]).
 on("progress",e=>{console.log(`progress=${e.progress}`)}).
 load(setup);
 
@@ -47,7 +47,9 @@ let alertText,alertTimer;
 let highScore;
 let win;
 
+let shield;
 let shieldState;
+let shieldTimer;
 
 function setup() {
 	stage = app.stage;
@@ -119,23 +121,31 @@ function setup() {
     gameOverScene.visible = false;
     stage.addChild(gameOverScene);
     
-    // #3b - Create the `Win` scene and make it invisible
+    // Create the `Win` scene and make it invisible
 	winScene = new PIXI.Container();
     winScene.addChild(spriteWin);
     winScene.visible = false;
     stage.addChild(winScene);
 
-	// #4 - Create labels for all 3 scenes
+	// Create labels for all 3 scenes
     createStartLabelsAndButtons();
     createEndLabelsAndButtons();
     createWinLabelsAndButtons();
 
-	// #5 - Create ship and set shields
+	// Create ship
     ship = new Ship();
     gameScene.addChild(ship);
+
+    //create shields
+    shield = new Shield();
+    shield.x = ship.x;
+    shield.y = ship.y;
+    shield.visible = false;
+    gameScene.addChild(shield);
     shieldState = false;
+    shieldTimer = 0;
 	
-	// #6 - Load Sounds
+	// Load Sounds
     shootSound = new Howl({
         src:['sounds/shoot.wav']
     });
@@ -152,7 +162,7 @@ function setup() {
         volume: 0.5
     });
 
-	// #8 - Start update loop
+	// Start update loop
 	app.ticker.add(gameLoop);
 	// Now our `startScene` is visible
 	// Clicking the button calls startGame()
@@ -462,7 +472,7 @@ function createWinLabelsAndButtons(){
     winText2.y = sceneHeight/2 - 100;
     winScene.addChild(winText2);
 
-    //Purpel syle
+    //Purple syle
     textStyle = new PIXI.TextStyle({
         fill: 0xFFFFFF,
         fontSize: 30 ,
@@ -521,6 +531,10 @@ function startGame(){
     loadLevel();
     
     SpawnLight();
+
+}
+
+function SetShield(){
 
 }
 
@@ -600,7 +614,7 @@ function gameLoop(){
     
 	//Move Ship
 	let mousePosition = app.renderer.plugins.interaction.mouse.global;
-    
+
     let amt = 6*dt;
 
     //lerp (linear interpolate) the x&y values with lerp()
@@ -613,6 +627,21 @@ function gameLoop(){
     ship.x = clamp(newX,0+w2,sceneWidth-w2);
     ship.y = clamp(newY,0+h2,sceneHeight-h2);
 
+    //move shield
+    shield.x = ship.x;
+    shield.y = ship.y;
+
+    //determines if shield is active
+    if(shieldState){
+        shield.visible = true;
+        shieldTimer++;
+    }
+
+    if(shieldTimer > 100){
+        shieldState = false;
+        shieldTimer = 0;
+        shield.visible = false;
+    }
     
 	// #3 - Move Circles
     for(let c of circles){
@@ -642,10 +671,11 @@ function gameLoop(){
 	for(let c of circles){
         //circles and ship circle collision detection
         if(c.isAlive && circIntersect(c,ship)){
+            if(!shieldState){
             hitSound.play();
             gameScene.removeChild(c);
             c.isAlive = false;
-            if(!shieldState){
+            
                 decreaseLifeBy(20);
             }
             
@@ -666,11 +696,28 @@ function gameLoop(){
 
     //ship and light collision detection
     if(light.isAlive && circIntersect(light,ship)){
-        let lAlert = "The IPRE gains the light!";
+
+        let randInt = Math.floor(Math.random()*(5));
+
+        if(randInt == 3){
+            shieldState = true;
+        }
+
+        let lAlert;
+
+        if(shieldState){ //special text for getting a shield boost
+            lAlert = "The IPRE makes a shield from the light!";
+        }
+        else{
+            lAlert = "The IPRE gains the light!";
+        }
+        
         setAlertItem(lAlert);
         increaseScoreBy(1);
         recordHighScore(score);
         light.isAlive = false;
+
+
     }
     
     //Increase timer

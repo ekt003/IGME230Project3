@@ -76,3 +76,13 @@ class LightofCreation extends PIXI.Sprite{
         this.fwd.y *= -1;
     }
 }
+
+class Shield extends PIXI.Sprite{
+    constructor(x=0,y=0){
+        super(PIXI.loader.resources["images/lucretiaShield.png"].texture);
+        this.anchor.set(.5,.5); //set center of the sprite
+        this.scale.set(0.2);
+        this.x = x;
+        this.y = y;
+    }
+}
