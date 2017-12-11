@@ -151,7 +151,6 @@ function setup() {
         loop: true,
         volume: 0.5
     });
-    	
 
 	// #8 - Start update loop
 	app.ticker.add(gameLoop);
@@ -159,12 +158,15 @@ function setup() {
 	// Clicking the button calls startGame()
 }
 
+//displays the instruction scene
 function displayInstructions(){
+    //sets only instructions scene to visible
     startScene.visible = false;
     instScene.visible = true;
     gameOverScene.visible = false;
     gameScene.visible = false;
 
+    //makes the button style
     buttonStyle = new PIXI.TextStyle({
         fill:0xFFFFFF,
         fontSize: 36,
@@ -209,6 +211,7 @@ function displayInstructions(){
         strokeThickness: 4
     })
 
+    //list of instruction label
     let instList = [];
 
     //this was as non-DRY as I could since they all needed custom x and y positions and different content for each line
@@ -217,7 +220,6 @@ function displayInstructions(){
     instList.push(createNewLine(35, 180, "Creation when it spawns and avoid being hit", instStyle));
     instList.push(createNewLine(35, 210, "by the colorful particles emanating from the ", instStyle));
     instList.push(createNewLine(30, 240, "monstrous hunger at the bottom of the screen.", instStyle));
-
     instList.push(createNewLine(40, 300, "If the Hunger’s particles consume the light", instStyle));
     instList.push(createNewLine(65, 330, "before you can reach it, it grows more", instStyle));
     instList.push(createNewLine(45, 360, "powerful and the light becomes even harder ", instStyle));
@@ -226,6 +228,7 @@ function displayInstructions(){
     instList.push(createNewLine(60, 450, "retrieve enough Light before your luck ", instStyle));
     instList.push(createNewLine(170, 480, "(and ship) run out.", instStyle));
 
+    //adds instructions to the scene
     for(let label of instList){
         instScene.addChild(label);
     }
@@ -243,6 +246,7 @@ function createNewLine(xPos, yPos, content, style){
     return instLabel;
 }
 
+//adds content to the start screen
 function createStartLabelsAndButtons(){
     buttonStyle = new PIXI.TextStyle({
         fill:0xFFFFFF,
@@ -298,7 +302,7 @@ function createStartLabelsAndButtons(){
     let tutorialButton = new PIXI.Text("How to Play");
     tutorialButton.style = buttonStyle;
     tutorialButton.x = 200;
-    tutorialButton.y = sceneHeight-150;
+    tutorialButton.y = sceneHeight-100;
     tutorialButton.interactive = true;
     tutorialButton.buttonMode = true;
     tutorialButton.on("pointerup",displayInstructions); //function reference
@@ -307,6 +311,8 @@ function createStartLabelsAndButtons(){
 
     startScene.addChild(tutorialButton);
 }
+
+//adds content to the game screen
 function createGameLabelsAndButtons(){
 
     //set up `gameScene`
@@ -349,6 +355,8 @@ function createGameLabelsAndButtons(){
     gameScene.addChild(alertItem);
 
 }
+
+//adds content to the end game
 function createEndLabelsAndButtons(){
     
     //Red Style
@@ -402,6 +410,8 @@ function createEndLabelsAndButtons(){
 
 
 }
+
+//adds content to win scene
 function createWinLabelsAndButtons(){
     
     //Red Style
@@ -456,13 +466,16 @@ function createWinLabelsAndButtons(){
 
 }
 
+//start game function
 function startGame(){
+    //sets game scene to visible and turns off all other scenes
     startScene.visible = false;
     instScene.visible = false;
     gameOverScene.visible = false;
     gameScene.visible = true;
     win = false;
 
+    //sets base stats and spawns necessary elements
     levelNum = 1;
     score = 0;
     life = 100;
@@ -478,25 +491,29 @@ function startGame(){
 
 }
 
-
-
+//increases player score
 function increaseScoreBy(value){
     score += value;
     scoreLabel.text = `Score   ${score}`;
     
 }
 
+//decreases player life
 function decreaseLifeBy(value){
     life -= value;
     life = parseInt(life);
     lifeLabel.text = `Life   ${life}%`;
 }
+
+//set alert status
 function setAlertItem(input){
     
     alertText = input;
     alertTimer = 0;
     
 }
+
+//changing alert status through timers
 function checkAlertItem(){
 //Increase timer
     
@@ -511,11 +528,13 @@ function checkAlertItem(){
         alertItem.text = "...";
     }
 }
+
+//spawns a singular hunger particle
 function SpawnCircle(){
-    console.log("Spawn 1 hungery boi")
     createCircles(1);
 }
 
+//spawns a light of creation object
 function SpawnLight(){
 //    let c = new LightofCreation(10,0xFFFFFF);
     let c = new LightofCreation2();
@@ -525,6 +544,7 @@ function SpawnLight(){
     gameScene.addChild(light);
 }
 
+//main game loop
 function gameLoop(){
 	if (paused) return; // keep this commented out for now
 	
@@ -560,20 +580,6 @@ function gameLoop(){
     let h2 = ship.height/2;
     ship.x = clamp(newX,0+w2,sceneWidth-w2);
     ship.y = clamp(newY,0+h2,sceneHeight-h2);
-	
-    //BG scrolling
-//    BG.position.y += .1;
-//    BG2.position.y += .1;
-//    BG3.position.y += .1;
-//    if(BG.position.y <= sceneHeight){
-//        BG.position.y = -sceneHeight*2;
-//    }
-//    if(BG2.position.y <= sceneHeight){
-//        BG2.position.y = -sceneHeight*2;
-//    }
-//    if(BG3.position.y <= sceneHeight){
-//        BG3.position.y = -sceneHeight*2;
-//    }
 
     
 	// #3 - Move Circles
@@ -598,21 +604,12 @@ function gameLoop(){
     // #3 - gyrate Hunger
     for(let h of hunger){
         h.moveInCircle(dt);
-//        if(h.x <= h.radius || h.x >= sceneWidth-h.radius){
-//            h.reflectX();
-//            //c.move(dt);
-//        }
-//        //c.y <= c.radius || 
-//        if(h.y >= sceneHeight-h.radius){
-//            h.reflectY();
-//            h.move(dt);
-//        }
     }
 	
 	//Check for Collisions
 	for(let c of circles){
-        //circles and ship
-        if(c.isAlive && rectsIntersect(c,ship)){
+        //circles and ship circle collision detection
+        if(c.isAlive && circIntersect(c,ship)){
             hitSound.play();
             gameScene.removeChild(c);
             c.isAlive = false;
@@ -621,8 +618,8 @@ function gameLoop(){
             }
             
         }
-        if((light.isAlive && c.isAlive && rectsIntersect(c,light)) || (light.isAlive && light.y > sceneHeight)){
-            //console.log("Hunger gets the light");
+        //circles and light collision detection
+        if((light.isAlive && c.isAlive && circIntersect(c,light)) || (light.isAlive && light.y > sceneHeight)){
             let hAlert = "The Hunger consumed the light!";
             setAlertItem(hAlert);
             hungerSpeed +=10;
@@ -635,8 +632,8 @@ function gameLoop(){
         
     }
 
-    if(light.isAlive && rectsIntersect(light,ship)){
-        //console.log("The IPRE gains the light!");
+    //ship and light collision detection
+    if(light.isAlive && circIntersect(light,ship)){
         let lAlert = "The IPRE gains the light!";
         setAlertItem(lAlert);
         increaseScoreBy(1);
@@ -646,9 +643,6 @@ function gameLoop(){
     
     //Increase timer
     circleTimer += 1;
-    //console.log(circleTimer)
-    //console.log("Difficulty: "+levelDifficultly)
-    //console.log("Timer: "+circleTimer)
     //spawn circle
     if(circleTimer >= levelDifficultly){
         
@@ -687,6 +681,7 @@ function gameLoop(){
 function createCircles(numCircles){
     for(let i=0;i<numCircles;i++){
         
+        //tints the circles randomly to create a darkened rainbow effect
         let colorTint = Math.floor(Math.random()*(10));
         let colorSel = 0x000000;
         switch(colorTint){
@@ -726,12 +721,14 @@ function createCircles(numCircles){
         c.x = Math.random() * (sceneWidth - 50) + 25;
         c.y = sceneHeight - 25;
         
+        //adds the new circle to the list of circles and the scene
         circles.push(c);
         gameScene.addChild(c);
         
     }
 }
 
+//creates the dark cloud at the bottom of the screen
 function createHunger(numHunger){
     for(let i=0;i<numHunger;i++){
         let h = new Circle(50, 0x111111);
@@ -742,6 +739,8 @@ function createHunger(numHunger){
         gameScene.addChild(h);  
     }
 }
+
+//loads up the game level
 function loadLevel(){
     score = 0;
     createCircles(20);
@@ -752,12 +751,16 @@ function loadLevel(){
     decreaseLifeBy(0);
     paused = false;
 }
+
+//loadStorage for high score tracking
 function recordHighScore(scoreIn){
     loadHighScore();
     if(scoreIn>highScore){
         let save = localStorage.setItem("--IPRE-SCORE--",scoreIn);
     }
 }
+
+//loading high score at the end of the game
 function loadHighScore(){
     highScore = localStorage.getItem("--IPRE-SCORE--");
     if(!highScore){
@@ -767,6 +770,8 @@ function loadHighScore(){
         highScore = JSON.parse(highScore);
     }
 }
+
+//end of game state
 function end(){
     paused = true;
 

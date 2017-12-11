@@ -28,13 +28,13 @@
 		let circ1 = a.getBounds();
 		let circ2 = b.getBounds();
 
-		let rad1 = circ1.width/2;
-		let rad2 = circ2.width/2;
+		let rad1 = circ1.width/2 + 5;
+		let rad2 = circ2.width/2 + 5;
 
 		//distance formula
 		let dist = Math.sqrt(((circ2.x - circ1.x)*(circ2.x-circ1.x)) + ((circ2.y-circ1.y) * (circ2.y-circ1.y)));
 		
-		return rad1+rad2 < dist;
+		return rad1+rad2 > dist;
 
 
 	}
