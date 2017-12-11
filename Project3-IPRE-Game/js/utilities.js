@@ -22,10 +22,41 @@
 		var bb = b.getBounds();
 		return ab.x + ab.width > bb.x && ab.x < bb.x + bb.width && ab.y + ab.height > bb.y && ab.y < bb.y + bb.height;
 	}
+
+	//circle collision detection 
+	function circIntersect(a,b){
+		let circ1 = a.getBounds();
+		let circ2 = b.getBounds();
+
+		let rad1 = circ1.width/2;
+		let rad2 = circ2.width/2;
+
+		//distance formula
+		let dist = Math.sqrt(((circ2.x - circ1.x)*(circ2.x-circ1.x)) + ((circ2.y-circ1.y) * (circ2.y-circ1.y)));
+		
+		return rad1+rad2 < dist;
+
+
+	}
 	
 	// these 2 helpers are used by classes.js
-	function getRandomUnitVector(){
-		let x = getRandom(-1,1);
+	function getRandomUnitVectorUp(){
+		let x = getRandom(0,1);
+		let y = getRandom(-1,0);
+		let length = Math.sqrt(x*x + y*y);
+		if(length == 0){ // very unlikely
+			x=1; // point right
+			y=0;
+			length = 1;
+		} else{
+			x /= length;
+			y /= length;
+		}
+	
+		return {x:x, y:y};
+	}
+    function getRandomUnitVectorDown(){
+		let x = getRandom(0,1);
 		let y = getRandom(-1,1);
 		let length = Math.sqrt(x*x + y*y);
 		if(length == 0){ // very unlikely

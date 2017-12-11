@@ -10,7 +10,6 @@ const sceneHeight = app.view.height;
 
 // pre-load the images
 PIXI.loader.
-add(["images/Spaceship.png"]).
 add(["images/explosions.png"]).
 add(["images/blackOpal.jpg"]).
 on("progress",e=>{console.log(`progress=${e.progress}`)}).
@@ -21,11 +20,14 @@ let stage;
 
 // game variables
 let startScene;
-let gameScene,ship,scoreLabel,lifeLabel,shootSound,hitSound,fireballSound;
 let gameOverScene;
 let circleTimer;
 let levelDifficultly;
+<<<<<<< HEAD
 let BG,BG2,BG3;
+=======
+
+>>>>>>> cf39c801991fc75bfeae4230b21ae6eacd4278b3
 
 let circles = [];
 let hunger = [];
@@ -33,13 +35,13 @@ let score = 0;
 let life = 100;
 let levelNum = 1;
 let paused = true;
-let gameOverScoreLabel;
 let light;
 
 function setup() {
 	stage = app.stage;
     
     //Create the background Image
+<<<<<<< HEAD
     BG = PIXI.Sprite.fromImage('images/blackOpal.jpg');
     BG.position.x = 0;
     BG.position.y = 0;
@@ -56,6 +58,8 @@ function setup() {
     BG3.position.x = 0;
     BG3.position.y = sceneHeight;
     stage.addChild(BG3);
+=======
+>>>>>>> cf39c801991fc75bfeae4230b21ae6eacd4278b3
     
 	// #1 - Create the `start` scene
 	startScene = new PIXI.Container();
@@ -66,13 +70,11 @@ function setup() {
     gameScene.visible = false;
     stage.addChild(gameScene);
 
-	// #3 - Create the `gameOver` scene and make it invisible
 	gameOverScene = new PIXI.Container();
     gameOverScene.visible = false;
     stage.addChild(gameOverScene);
 
 	// #4 - Create labels for all 3 scenes
-	createLabelsAndButtons();
 
 	// #5 - Create ship
     ship = new Ship();
@@ -92,13 +94,10 @@ function setup() {
 
 	// #8 - Start update loop
 	app.ticker.add(gameLoop);
-
 	// Now our `startScene` is visible
 	// Clicking the button calls startGame()
 }
 
-function createLabelsAndButtons(){
-    let buttonStyle = new PIXI.TextStyle({
         fill:0xFFFFFF,
         fontSize: 36,
         fontFamily: "Consolas",
@@ -161,23 +160,15 @@ function createLabelsAndButtons(){
     scoreLabel = new PIXI.Text();
     scoreLabel.style = textStyle;
     scoreLabel.x = 5;
-    scoreLabel.y = 5;
     gameScene.addChild(scoreLabel);
     increaseScoreBy(0);
 
     //make life label
     lifeLabel = new PIXI.Text();
     lifeLabel.style = textStyle;
-    lifeLabel.x = 5;
-    lifeLabel.y = 26;
     gameScene.addChild(lifeLabel);
     decreaseLifeBy(0);
 
-    let gameOverText = new PIXI.Text(`The Hunger Wins`);
-
-    gameOverScoreLabel = new PIXI.Text();
-
-    textStyle = new PIXI.TextStyle({
         fill: 0xFFFFFF,
         fontSize: 64,
         fontFamily: "Consolas",
@@ -185,13 +176,10 @@ function createLabelsAndButtons(){
         strokeThickness: 6
     });
 
-    
-
     gameOverText.style = textStyle;
     gameOverText.x = 35;
     gameOverText.y = sceneHeight/2 - 160;
     gameOverScene.addChild(gameOverText);
-
 
     textStyle = new PIXI.TextStyle({
         fill: 0xFFFFFF,
@@ -200,12 +188,10 @@ function createLabelsAndButtons(){
         stroke: 0x9900FF,
         strokeThickness: 4
     })
-
     gameOverScoreLabel.style = textStyle;
     gameOverScoreLabel.x = 50;
     gameOverScoreLabel.y = sceneHeight/2 + 50;
     gameOverScene.addChild(gameOverScoreLabel);
-
     //make "play again" button
     let playAgainButton = new PIXI.Text("Try the next cycle");
     playAgainButton.style = buttonStyle;
@@ -228,8 +214,6 @@ function startGame(){
     levelNum = 1;
     score = 0;
     life = 100;
-    increaseScoreBy(0);
-    decreaseLifeBy(0);
     ship.x = 300;
     ship.y = 450;
     circleTimer = 0;
@@ -249,16 +233,13 @@ function decreaseLifeBy(value){
     life = parseInt(life);
     lifeLabel.text = `Life   ${life}%`;
 }
-
 function SpawnCircle(){
     console.log("Spawn 1 hungery boi")
     createCircles(1);
 }
 
 function SpawnLight(){
-    let c = new Circle(10,0xFFFFFF);
     c.x = Math.floor(Math.random()*(sceneWidth));
-    c.y = 20;
     light = c;
     gameScene.addChild(light);
 }
@@ -343,14 +324,12 @@ function gameLoop(){
             decreaseLifeBy(20);
         }
         if((light.isAlive && c.isAlive && rectsIntersect(c,light)) || (light.isAlive && light.y > sceneHeight)){
-            console.log("Hunger gets the light");
             light.isAlive = false;
         }
         
     }
 
     if(light.isAlive && rectsIntersect(light,ship)){
-        console.log("The IPRE gains the light!");
         increaseScoreBy(1);
         light.isAlive = false;
     }
@@ -359,12 +338,9 @@ function gameLoop(){
     circleTimer += 1;
     //console.log(circleTimer)
     //spawn circle
-    if(circleTimer == levelDifficultly){
-        //console.log(circleTimer)
         SpawnCircle();
         circleTimer = 0;
     }
-
 
 	// #6 - Now do some clean up
 	if(!light.isAlive){
@@ -424,7 +400,6 @@ function createCircles(numCircles){
 				break;
 		}
         
-        let c = new Circle(10, colorSel);
         c.x = Math.random() * (sceneWidth - 50) + 25;
         c.y = sceneHeight - 25;
         
@@ -436,7 +411,6 @@ function createCircles(numCircles){
 
 function createHunger(numHunger){
     for(let i=0;i<numHunger;i++){
-        let h = new Circle(50, 0x222222);
         h.x = Math.random() * (sceneWidth - 50) + 25;
         h.y = sceneHeight - 5 - i;
         h.angle = i;
@@ -445,11 +419,9 @@ function createHunger(numHunger){
     }
 }
 function loadLevel(){
-    createCircles(50);
     createHunger(40);
     paused = false;
 }
-
 function end(){
     paused = true;
 
@@ -459,10 +431,8 @@ function end(){
     
     hunger.forEach(h=>gameScene.removeChild(h));
     hunger = [];
-    
     gameScene.removeChild(light);
 
-    gameOverScene.visible = true;
     gameScene.visible = false;
 
     gameOverScoreLabel.text = `You saved ${score} Lights of Creation`;

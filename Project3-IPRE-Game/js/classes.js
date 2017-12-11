@@ -1,16 +1,16 @@
 
 class Ship extends PIXI.Sprite{
     constructor(x=0,y=0){
-        super(PIXI.loader.resources["images/Spaceship.png"].texture);
+        super(PIXI.loader.resources["images/Starblaster.png"].texture);
         this.anchor.set(.5,.5); //set center of the sprite
-        this.scale.set(0.1);
+        this.scale.set(0.15);
         this.x = x;
         this.y = y;
     }
 }
 
 class Circle extends PIXI.Graphics{
-    constructor(radius, color=0xFF0000, x=0, y=0,angle=0.0){
+    constructor(radius, color=0xFF0000, speed=50, x=0, y=0,angle=0.0){
         super();
         this.beginFill(color);
         this.drawCircle(0,0,radius);
@@ -21,8 +21,8 @@ class Circle extends PIXI.Graphics{
         
 
         //variables
-        this.fwd = getRandomUnitVector();
-        this.speed = 50;
+        this.fwd = getRandomUnitVectorUp();
+        this.speed = speed;
         this.isAlive = true;
         this.angle = angle;
     }
@@ -52,7 +52,7 @@ class Circle extends PIXI.Graphics{
 }
 
 class LightofCreation extends PIXI.Graphics{
-    constructor(radius, x=0, y=0,angle=0.0){
+    constructor(radius, x=0, y=0,angle=0.0, speed=50){
         super();
         this.beginFill(0xFFFFFF);
         this.drawCircle(0,0,radius);
@@ -62,15 +62,43 @@ class LightofCreation extends PIXI.Graphics{
         this.radius = radius;
 
         //variables
+        this.fwd = getRandomUnitVectorDown();
+        this.speed = speed;
+
         this.isAlive = true;
 
     }
 
     move(dt=1/60){
-        this.y -= 2*dt;
+        this.y += 60*dt;//*this.fwd;
     }
+    
     reflectY(){
         this.fwd.y *= -1;
     }
     
+}
+class LightofCreation2 extends PIXI.Sprite{
+    constructor(x=0,y=0,speed=50){
+        super(PIXI.loader.resources["images/light.png"].texture);
+        this.anchor.set(.5,.5); //set center of the sprite
+        this.scale.set(0.2);
+        this.x = x;
+        this.y = y;
+    
+    //variables
+        this.fwd = getRandomUnitVectorDown();
+        this.speed = speed;
+
+        this.isAlive = true;
+
+    }
+
+    move(dt=1/60){
+        this.y += 60*dt;//*this.fwd;
+    }
+    
+    reflectY(){
+        this.fwd.y *= -1;
+    }
 }
