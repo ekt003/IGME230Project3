@@ -51,34 +51,8 @@ class Circle extends PIXI.Graphics{
     }
 }
 
-class LightofCreation extends PIXI.Graphics{
-    constructor(radius, x=0, y=0,angle=0.0, speed=50){
-        super();
-        this.beginFill(0xFFFFFF);
-        this.drawCircle(0,0,radius);
-        this.endFill();
-        this.x = x;
-        this.y = y;
-        this.radius = radius;
-
-        //variables
-        this.fwd = getRandomUnitVectorDown();
-        this.speed = speed;
-
-        this.isAlive = true;
-
-    }
-
-    move(dt=1/60){
-        this.y += 60*dt;//*this.fwd;
-    }
-    
-    reflectY(){
-        this.fwd.y *= -1;
-    }
-    
-}
-class LightofCreation2 extends PIXI.Sprite{
+//class for the Light of Creation object
+class LightofCreation extends PIXI.Sprite{
     constructor(x=0,y=0,speed=50){
         super(PIXI.loader.resources["images/light.png"].texture);
         this.anchor.set(.5,.5); //set center of the sprite

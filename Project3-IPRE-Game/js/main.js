@@ -536,8 +536,7 @@ function SpawnCircle(){
 
 //spawns a light of creation object
 function SpawnLight(){
-//    let c = new LightofCreation(10,0xFFFFFF);
-    let c = new LightofCreation2();
+    let c = new LightofCreation();
     c.x = Math.floor(Math.random()*(sceneWidth));
     c.y = -20;
     light = c;
