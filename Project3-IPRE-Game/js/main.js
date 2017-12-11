@@ -13,6 +13,7 @@ PIXI.loader.
 add(["images/Starblaster.png"]).
 add(["images/blackOpal.jpg"]).
 add(["images/light.png"]).
+add(["images/lucretiaShield.png"]).
 on("progress",e=>{console.log(`progress=${e.progress}`)}).
 load(setup);
 
@@ -437,7 +438,7 @@ function createWinLabelsAndButtons(){
     winText.y = sceneHeight/2 - 160;
     winScene.addChild(winText);
 
-    //Purpel syle
+    //Purple syle
     textStyle = new PIXI.TextStyle({
         fill: 0xFFFFFF,
         fontSize: 30 ,
@@ -628,10 +629,11 @@ function gameLoop(){
 	for(let c of circles){
         //circles and ship circle collision detection
         if(c.isAlive && circIntersect(c,ship)){
+            if(!shieldState){
             hitSound.play();
             gameScene.removeChild(c);
             c.isAlive = false;
-            if(!shieldState){
+            
                 decreaseLifeBy(20);
             }
             
