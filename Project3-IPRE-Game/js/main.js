@@ -11,7 +11,6 @@ const sceneHeight = app.view.height;
 // pre-load the images
 PIXI.loader.
 add(["images/Starblaster.png"]).
-add(["images/explosions.png"]).
 add(["images/blackOpal.jpg"]).
 add(["images/light.png"]).
 on("progress",e=>{console.log(`progress=${e.progress}`)}).
@@ -47,6 +46,7 @@ let alertText,alertTimer;
 let highScore;
 let win;
 
+let shield;
 let shieldState;
 
 function setup() {
@@ -119,23 +119,30 @@ function setup() {
     gameOverScene.visible = false;
     stage.addChild(gameOverScene);
     
-    // #3b - Create the `Win` scene and make it invisible
+    // Create the `Win` scene and make it invisible
 	winScene = new PIXI.Container();
     winScene.addChild(spriteWin);
     winScene.visible = false;
     stage.addChild(winScene);
 
-	// #4 - Create labels for all 3 scenes
+	// Create labels for all 3 scenes
     createStartLabelsAndButtons();
     createEndLabelsAndButtons();
     createWinLabelsAndButtons();
 
-	// #5 - Create ship and set shields
+	// Create ship
     ship = new Ship();
     gameScene.addChild(ship);
-    shieldState = false;
+
+    //create shields
+    shield = new Shield();
+    shield.x = ship.x;
+    shield.y = ship.y;
+    shield.visible = false;
+    gameScene.addChild(shield);
+    shieldState = true;
 	
-	// #6 - Load Sounds
+	// Load Sounds
     shootSound = new Howl({
         src:['sounds/shoot.wav']
     });
@@ -152,7 +159,7 @@ function setup() {
         volume: 0.5
     });
 
-	// #8 - Start update loop
+	// Start update loop
 	app.ticker.add(gameLoop);
 	// Now our `startScene` is visible
 	// Clicking the button calls startGame()
@@ -491,6 +498,10 @@ function startGame(){
 
 }
 
+function SetShield(){
+
+}
+
 //increases player score
 function increaseScoreBy(value){
     score += value;
@@ -567,7 +578,7 @@ function gameLoop(){
     
 	//Move Ship
 	let mousePosition = app.renderer.plugins.interaction.mouse.global;
-    
+
     let amt = 6*dt;
 
     //lerp (linear interpolate) the x&y values with lerp()
@@ -580,6 +591,14 @@ function gameLoop(){
     ship.x = clamp(newX,0+w2,sceneWidth-w2);
     ship.y = clamp(newY,0+h2,sceneHeight-h2);
 
+    //move shield
+    shield.x = ship.x;
+    shield.y = ship.y;
+
+    //determines if shield is active
+    if(shieldState){
+        shield.visible = true;
+    }
     
 	// #3 - Move Circles
     for(let c of circles){
