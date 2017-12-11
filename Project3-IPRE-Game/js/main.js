@@ -604,7 +604,7 @@ function gameLoop(){
         shieldTimer++;
     }
 
-    if(shieldTimer > 100){
+    if(shieldTimer > 200){
         shieldState = false;
         shieldTimer = 0;
         shield.visible = false;
@@ -664,9 +664,9 @@ function gameLoop(){
     //ship and light collision detection
     if(light.isAlive && circIntersect(light,ship)){
 
-        let randInt = Math.floor(Math.random()*(5));
+        let randInt = Math.floor(Math.random()*(3));
 
-        if(randInt == 3){
+        if(randInt == 1){
             shieldState = true;
         }
 
@@ -674,6 +674,9 @@ function gameLoop(){
 
         if(shieldState){ //special text for getting a shield boost
             lAlert = "The IPRE makes a shield from the light!";
+            if(shieldTimer > 100){
+                shieldTimer -=20;
+            }
         }
         else{
             lAlert = "The IPRE gains the light!";
