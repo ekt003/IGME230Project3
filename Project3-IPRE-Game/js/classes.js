@@ -3,7 +3,7 @@ class Ship extends PIXI.Sprite{
     constructor(x=0,y=0){
         super(PIXI.loader.resources["images/Starblaster.png"].texture);
         this.anchor.set(.5,.5); //set center of the sprite
-        this.scale.set(0.15);
+        this.scale.set(0.125);
         this.x = x;
         this.y = y;
     }
