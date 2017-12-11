@@ -255,7 +255,11 @@ function createNewLine(xPos, yPos, content, style){
 
     return instLabel;
 }
-
+//this funciton skips to the win screen if you aren't a pro gamer like us
+function skipToWin(){
+    win = true;
+    end(win);
+}
 //adds content to the start screen
 function createStartLabelsAndButtons(){
     buttonStyle = new PIXI.TextStyle({
@@ -320,6 +324,28 @@ function createStartLabelsAndButtons(){
     tutorialButton.on("pointerout",e=>e.currentTarget.alpha = 1.0); //arrow function
 
     startScene.addChild(tutorialButton);
+    
+    //text style for the skip button
+    let skipTextStyle = new PIXI.TextStyle({
+        fill:0xFFFFFF,
+        fontSize: 18,
+        fontFamily: "Consolas",
+        stroke: 0xFFFF00,
+        strokeThickness: 2
+    });
+    
+    //make skip label
+    let skipToWinLabel = new PIXI.Text("Skip to Win Screen");
+    skipToWinLabel.style = skipTextStyle;
+    skipToWinLabel.x = 5;
+    skipToWinLabel.y = 580;
+    skipToWinLabel.interactive = true;
+    skipToWinLabel.buttonMode = true;
+    skipToWinLabel.on("pointerup",skipToWin); //function reference
+    skipToWinLabel.on("pointerover",e=>e.target.alpha = 0.7); //arrow function
+    skipToWinLabel.on("pointerout",e=>e.currentTarget.alpha = 1.0); //arrow function
+
+    startScene.addChild(skipToWinLabel);
 }
 
 //adds content to the game screen
@@ -433,12 +459,18 @@ function createWinLabelsAndButtons(){
         strokeThickness: 6
     });
 
-    //GAME OVER
-    let winText = new PIXI.Text(`You Saved the Light!`);
+    //GAME WIN!
+    let winText = new PIXI.Text(`You Evaded`);
     winText.style = textStyle;
-    winText.x = 35;
+    winText.x = 120;
     winText.y = sceneHeight/2 - 160;
     winScene.addChild(winText);
+    
+    let winText2 = new PIXI.Text(`The Hunger!`);
+    winText2.style = textStyle;
+    winText2.x = 120;
+    winText2.y = sceneHeight/2 - 100;
+    winScene.addChild(winText2);
 
     //Purple syle
     textStyle = new PIXI.TextStyle({
@@ -455,16 +487,16 @@ function createWinLabelsAndButtons(){
     winScoreLabel.y = sceneHeight/2 + 50;
     winScene.addChild(winScoreLabel);
     
-    winHighScoreLabel = new PIXI.Text("You are the best!");
+    winHighScoreLabel = new PIXI.Text("You collected 100 Lights!");
     winHighScoreLabel.style = textStyle;
-    winHighScoreLabel.x = 50;
+    winHighScoreLabel.x = 110;
     winHighScoreLabel.y = sceneHeight/2 + 100;
     winScene.addChild(winHighScoreLabel);
     
     //make "play again" button
     let playAgainButton = new PIXI.Text("Remember your journey");
     playAgainButton.style = buttonStyle;
-    playAgainButton.x = 120;
+    playAgainButton.x = 110;
     playAgainButton.y = sceneHeight - 100;
     playAgainButton.interactive = true;
     playAgainButton.buttonMode = true;
@@ -482,6 +514,7 @@ function startGame(){
     startScene.visible = false;
     instScene.visible = false;
     gameOverScene.visible = false;
+    winScene.visible = false;
     gameScene.visible = true;
     win = false;
 
@@ -710,12 +743,12 @@ function gameLoop(){
 
 	// #7 - Is game over?
 	if(life <= 0){
-        end();
+        end(false);
         return;
     }
     if(score == 100){
         win = true;
-        end();
+        end(win);
         return;
     }
 	
@@ -821,7 +854,7 @@ function loadHighScore(){
 }
 
 //end of game state
-function end(){
+function end(didIWin){
     paused = true;
 
     //clear out level
@@ -832,7 +865,7 @@ function end(){
     hunger = [];
     gameScene.removeChild(light);
 
-    if(win){
+    if(didIWin){
          winScene.visible = true;
     }
     
@@ -840,10 +873,14 @@ function end(){
         gameOverScene.visible = true;
     }
     gameScene.visible = false;
-    backgroundMusic.stop();
-
-    gameOverScoreLabel.text = `You saved ${score} Lights of Creation`;
-    loadHighScore();
-    highScoreLabel.text = `Best cycle: ${highScore}`;
+    if(backgroundMusic){
+        backgroundMusic.stop();
+    }
+    if(gameOverScoreLabel){
+        gameOverScoreLabel.text = `You saved ${score} Lights of Creation`;
+        loadHighScore();
+        highScoreLabel.text = `Best cycle: ${highScore}`;
+    }
+    
 }
 
