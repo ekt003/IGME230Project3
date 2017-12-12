@@ -527,7 +527,7 @@ function startGame(){
     ship.y = 450;
     circleTimer = 0;
     alertTimer = alertLife;
-    levelDifficultly = 60;//One per 60 ticks
+    levelDifficultly = 90;//One per 60 ticks
     loadLevel();
     
     SpawnLight();
@@ -685,9 +685,9 @@ function gameLoop(){
             let hAlert = "The Hunger consumed the light!";
             setAlertItem(hAlert);
             hungerSpeed +=10;
-            levelDifficultly -= 2;
-            if(levelDifficultly <= 2){
-                levelDifficultly = 2;
+            levelDifficultly -= 1;
+            if(levelDifficultly <= 10){
+                levelDifficultly = 10;
             }
             light.isAlive = false;
         }
@@ -825,7 +825,7 @@ function createHunger(numHunger){
 //loads up the game level
 function loadLevel(){
     score = 0;
-    createCircles(20);
+    createCircles(10);
     createHunger(40);
     backgroundMusic.play();
     createGameLabelsAndButtons();
