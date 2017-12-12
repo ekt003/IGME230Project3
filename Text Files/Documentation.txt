@@ -6,6 +6,13 @@ The next major change was to color the circles a bunch of beautiful rainbow colo
 After this we started working with The Light of Creation. The first step was to make it exist in the first place, done through its own personal LightofCreation class. The class operated in a similar manner to the Circle class for The Hunger particles. It spawns slightly above the canvas and drifts downward. If it reaches the mass of black circles at the bottom of the page without being captured by either party, it is automatically awarded to The Hunger. After it is captured, a new light is spawned at the top of the screen.
 At that point, we realized that the player needed more power in their corner, partially because the game was really difficult, partially because we needed to meet more requirements. We then added a temporary shield power up that the player had a chance of receiving when they retrieved the Light. This helped balance our game and add more interest than just a basic schmup.
 
+Who Did What?
+We have submitted the Github repository with our project. It can show you exactly who did what. tl;dr...
+Declan: Music, Art, Bottom Info Panel, Black Cloud Creation, Difficulty Increase, Game Balancing,
+Emily: Particle Spawning, Documentation, Shield PowerUp, Instructions, Light of Creation Behaviors, Circle Collisions
+
+We consider the work to have been fairly even.
+
 Requirements:
 Useful and/or entertaining
 Entertainment is in the eye of the player. We hope that it’s fun!
