@@ -534,10 +534,6 @@ function startGame(){
 
 }
 
-function SetShield(){
-
-}
-
 //increases player score
 function increaseScoreBy(value){
     score += value;
