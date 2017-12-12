@@ -23,7 +23,7 @@ let stage;
 // game variables
 let startScene;
 let instScene;
-let gameScene,ship,scoreLabel,lifeLabel, alertLabel, alertItem,shootSound,hitSound,fireballSound;
+let gameScene,ship,scoreLabel,lifeLabel, alertLabel, alertItem,shootSound,hitSound,shieldPop;
 let gameOverScene;
 let winScene;
 let circleTimer;
@@ -153,8 +153,8 @@ function setup() {
     hitSound = new Howl({
         src:['sounds/hit.mp3']
     });
-    fireballSound = new Howl({
-        src:['sounds/fireball.mp3']
+    shieldPop = new Howl({
+        src:['sounds/shield.mp3']
     });
     backgroundMusic = new Howl({
         src:['sounds/starblaster.wav'],
@@ -701,6 +701,7 @@ function gameLoop(){
 
         if(randInt == 1){
             shieldState = true;
+            shieldPop.play();
         }
 
         let lAlert;
