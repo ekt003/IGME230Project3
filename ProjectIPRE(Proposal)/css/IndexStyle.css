@@ -33,8 +33,8 @@
 #navcontainer ul
 {
     margin: 0%;
-    padding-top: 1%;
-    padding-bottom: 1%;
+    padding-top: 0%;
+    padding-bottom: 0%;
     background-color: white;
     color: #777;
     display:inline-block;
@@ -131,7 +131,7 @@ h1,h2,h3{
 }
 h1{
     color: white;
-    font-size: 36pt;
+    font-size: 24pt;
     padding: 0%;
 }
 h2{
@@ -231,7 +231,7 @@ img{
         text-align: justify;
         }
         h1{
-            font-size: 24pt;
+            font-size: 20pt;
         }
     .parallax {
     
@@ -288,7 +288,7 @@ img{
     text-align: left;
     }
     h1{
-        font-size: 24pt;
+        font-size: 18pt;
     }
     .parallax {
     
