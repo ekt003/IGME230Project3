@@ -175,13 +175,18 @@ img{
     padding: 1%;
 }
 #gameBox{
-    margin-left: 15%;
-    position: absolute;
-    left: 300px;
+/*    margin-left: 15%;*/
+/*    position: absolute;*/
+/*    left: 300px;*/
     width: 650px;
     height: 650px;
     padding: 0%;
     border-style: none;
+    
+}
+#gameDiv{
+    width: 100%;
+    margin: auto;
     
 }
 /* ----- Media Queries -----*/
@@ -202,7 +207,7 @@ img{
     }
     #navcontainer ul
     {
-        margin 0%;
+        margin: 0%;
         padding: 1%;
         display:inline-block;
         width: 100%;

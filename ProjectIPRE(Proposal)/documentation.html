@@ -48,15 +48,86 @@
 <!-- Content Box -->
       <div class="box">
         <h2>Final Project Documentation</h2>
+          <h3 class="nameTag">Our Process</h3>
+          <p>
+              Our Project 3 Final started with the Circle Blaster Homework from our homework. Because we are both massive nerds and into a podcast called The Adventure Zone, we decided to base our final project around this shared interest. The Big Bad of our game is something called The Hunger which consumes entire planes of existence in an everlasting search for something called the Light of Creation. It was the role of the IPRE and their ship to capture The Light as often as possible to prevent The Hunger from gaining more power.
+          </p>
+          <p>
+              We started by modifying the homework to continuously spawn circles at the bottom of the screen and to have them drift upwards and de-spawn when they got out of range. After that we took away the ship’s shooting capabilities. This is because the role the player fills is one of self-preservation, not aggression.
+          </p>
+          <p>
+              The next major change was to color the circles a bunch of beautiful rainbow colors and add the swirling mass of darkness at the bottom of the screen (see the moveInCircle method in the Circle class) to represent The Hunger. We also made the particle speed and spawn rate increase every time The Hunger consume The Light of Creation. Circle collisions were subbed in for rectangle collisions because they are FancyTM. At this point, we were mostly done with everything related to the way The Hunger was going to work.
+          </p>
+          <p>
+              After this we started working with The Light of Creation. The first step was to make it exist in the first place, done through its own personal LightofCreation class. The class operated in a similar manner to the Circle class for The Hunger particles. It spawns slightly above the canvas and drifts downward. If it reaches the mass of black circles at the bottom of the page without being captured by either party, it is automatically awarded to The Hunger. After it is captured, a new light is spawned at the top of the screen.
+          </p>
+          <p>
+              At that point, we realized that the player needed more power in their corner, partially because the game was really difficult, partially because we needed to meet more requirements. We then added a temporary shield power up that the player had a chance of receiving when they retrieved the Light. This helped balance our game and add more interest than just a basic schmup.
+          </p>
+          <h3 class="nameTag">Who did what?</h3>
+          <p>
+              We have submitted the Github repository with our project. It can show you exactly who did what. tl;dr...
+          </p>
+          <ul>
+              <li><b>Declan:</b><ul> 
+                    <li>Music</li> 
+                    <li>Art</li>
+                    <li>Bottom Info Panel</li>
+                    <li>Black Cloud Creation</li> 
+                    <li>Difficulty Increase</li> 
+                    <li>Game Balancing</li>
+                    </ul>
+                </li>
+              <li><b>Emily:</b><ul> 
+                    <li>Particle Spawning</li>
+                    <li>Documentation</li>
+                    <li>Shield PowerUp</li>
+                    <li>Instructions</li>
+                    <li>Light of Creation Behaviors</li>
+                    <li>Circle Collisions</li>
+                    </ul>
+              </li>
+          </ul>
+          <p>We consider the work to have been fairly even.</p>
+          <h3 class="nameTag">Requirements:</h3>
+          <h4>Useful and Entertaining</h4>
+          <p>Entertainment is in the eye of the player. We hope that it’s fun!</p>
+          <h4>Demonstrates creativity</h4>
+          <p>It took a lot of creativity to implement the shield power-up. We toyed with creating an entirely new sprite that would just replace the regular ship if the power-up triggered, but instead we decided to have a sprite overlay for the ship which sticks to the ship’s position.</p>
+          <h4>Runs without errors</h4>
+          <p>There are no bugs, only features (seriously though, we don’t know of any errors)</p>
+          <h4>Visual Design is pleasing</h4>
+          <p>There is a consistent space aesthetic between the website and the game. Fonts and colors are consistent between scenes and creates a sense of unity between the elements.</p>
+          <h4>Uses Audio to enhance the experience</h4>
+          <p>Originally composed background music and sound effects. All sound used is original content.</p>
+          <h4>Interface is clear and well labeled</h4>
+          <p>All clickable buttons become slightly see-through when hovered over to indicate their interactive nature. Instructions tab is included to help the user learn the controls.</p>
+          <h4>Prevents and Handles errors well</h4>
+          <p>There aren’t options for users to give game breaking input. There are no known errors generated by the code at this time.</p>
+          <h4>Uses PixiJS for graphics and animations</h4>
+          <p>Did that.</p>
+          <h4>Only uses other libraries as necessary</h4>
+          <p>The only reference we used was the Circle Blaster assignment. Everything else was figured out on our own.</p>
+          <h4>Uses an additional HTML5 technology</h4>
+          <p>Used localStorage to store high scores</p>
+          <h4>Code is well formatted and commented</h4>
+          <p>All code is properly commented and documented</p>
+          <h4>CSS is primarily in a single external stylesheet</h4>
+          <p>The page that the game is hosted in has most of its CSS in an external stylesheet</p>
+          <h4>Makes proper use of structural tags, etc.</h4>
+          <p>Did the thing.</p>
+          <h4>Above and Beyond</h4>
+          <p>Win game state for when the player reaches a score of 100. Circle collisions for better collision detection. Power-up ability for the player. Custom soundtrack and sound assets. Scrolling background. Custom assets.</p>
+
+
       </div>
 <!-- Parallax Box -->
       <div class="parallax3"></div>
 <!-- Content Box -->
       <div class="box">
-        <h2>More Updates Coming Soon</h2>
+        <h2>First Version!</h2>
         <p>
-          Prototype Due: December 5th, 2017
-          Project Due: December 11th, 2017
+          Project Released on December 11th, 2017
         </p>
       </div>
   </body>
