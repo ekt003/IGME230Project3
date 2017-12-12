@@ -173,6 +173,15 @@ img{
     width: 100%;
     padding: 1%;
 }
+#gameBox{
+    margin-left: 15%;
+    position: absolute;
+    left: 300px;
+    width: 650px;
+    height: 650px;
+    padding: 0%;
+    border-style: none;
+}
 /* ----- Media Queries -----*/
 
 
